@@ -12,7 +12,7 @@ async function run() {
   } catch(error) {
     // Ensures that the client will close when you finish/error
     console.log(error);
-    // process.exit(1);
+    process.exit(1);
   }
 }
 run();
