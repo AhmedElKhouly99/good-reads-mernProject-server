@@ -7,16 +7,16 @@ const jwt = require("jsonwebtoken");
 const util = require("util"); // a library to promisify jwt functions (sign,verify)
 const signAsync = util.promisify(jwt.sign); // used in sign and create token
 const usersModel = require("./usersModel");
-const { customError, authError } = require("../../helpers/customErrors");
+const { customError, authError,  } = require("../../helpers/customErrors");
 const addValidation = require("./validation/userAdd");
+const { authorizeUser } = require('./middlewares');
+const updateValidation = require('./validation/userUpdate');
 
-//...........creation of Router........................//
-
+// creation of Router
 const usersRouter = express.Router();
 
-//.......................//
 //........................adding...........//
-usersRouter.post("/", addValidation, async (req, res, next) => {
+usersRouter.post("/signup", addValidation, async (req, res, next) => {
   const { firstName, lastName, email, password, age, gender, country } =
     req.body;
 
@@ -57,11 +57,48 @@ usersRouter.post("/login", async (req, res, next) => {
       secretKey
     ); //first parameter is data(payload) , second is secret key
 
-    res.send(token);
+    res.send({token});
   } catch (error) {
     next(error);
   }
 });
+
+// //....................................Updating.............................//
+
+usersRouter.patch('/:id', updateValidation, authorizeUser,async (req,res,next) => {
+  const {id} = req.params;
+  const {password} = req.body;
+  try {
+    const saltRound = 12;
+    const hashedPassword = password ? await bcrypt.hash(password, saltRound) : undefined;
+    req.body.password = hashedPassword;
+    await usersModel.findByIdAndUpdate(id,{$set:req.body})
+    res.send({message: "Updatted Successfully"});
+  } catch (error) {
+    next(error)
+  }
+
+})
+
+
+
+// userRouter.patch('/:userId', authorizeUser, async (req, res, next) => {
+//   const {userId} = req.params;
+//   const {password} = req.body;
+//   try {
+//       const saltRound = 12;
+//       const hashedPassword = password ? await bcrypt.hash(password, saltRound) : undefined;
+//       req.body.password = hashedPassword;
+//       await users.findByIdAndUpdate(userId, {$set: req.body});
+//       res.send({message: "Updatted Successfully"});
+//   } catch (error) {
+//       next(error);
+//   }
+// });
+
+
+
+
 
 
 
@@ -80,24 +117,7 @@ usersRouter.post("/login", async (req, res, next) => {
 //   }
 //   }
 
-//   //..................................login..............................//
 
-// carsRouter.post('/login',async(req,res,next) => {
-
-//   try {
-//     const {name,model} = req.body ;
-//     const car = await carsModel.findOne({name});            //return the full car object
-//      if(!car) throw authError;
-//     const result = await bcrypt.compare(model,car.model);   //return true or false
-//      if(!result) throw authError;
-//     const token = await signAsync(
-//       {id:car.id,admin:false} , secretKey);    //first parameter is data(payload) , second is secret key
-
-//     res.send(token);
-//   } catch (error) {
-//     next(error)
-//   }
-// });
 
 //   // .......................................Listing......................//
 //   carsRouter.get('/', async(req,res,next) => {
@@ -113,37 +133,8 @@ usersRouter.post("/login", async (req, res, next) => {
 
 //   })
 
-//   // //.................................Deleting......................//
 
-//   // carsRouter.delete('/',async (req,res) => {
-//   //   const {id} = req.query ;
-//   //    const arr=[]
-//   //   const filteredCars = id ? cars.filter(car => +id !== car.id) : arr
 
-//   //   // const filteredCars = cars.filter(car =>{
-//   //   //   if (car.id !== +id)
-//   //   //   {return true ;}
-//   //   //   else
-//   //   //   {return false ;}
-//   // // });
-
-//   // await fs.writeFile('./cars/cars.json',JSON.stringify(filteredCars,null,2));
-//   // res.send("Deleted Succssfulle")
-//   // })
-
-//   // //....................................Updating.............................//
-
-//   carsRouter.patch('/:id',authorizeUser,async (req,res,next) => {
-
-//    const {id} = req.params;
-//    try {
-//     await carsModel.findByIdAndUpdate(id,{$set:req.body})
-//     res.send("Updated Successfully")
-//    } catch (error) {
-//      next(error)
-//    }
-
-//   })
 
 //   // //.............................Using Request Params.......................//
 
