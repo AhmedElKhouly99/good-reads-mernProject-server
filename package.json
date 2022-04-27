@@ -4,14 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-<<<<<<< HEAD
     "debug": "nodemon --inspect=9249 index.js",
-    "start": "nodemon index.js",
-=======
-    "debug": "nodemon --inspect=9249 server.js",
-    "start": "node index.js",
->>>>>>> 1e10a6f8a90e84ab6bd52c115c494fb4dd34e684
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "nodemon index.js"
   },
   "author": "",
   "license": "ISC",
