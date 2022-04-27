@@ -1,21 +1,13 @@
 const express = require("express");
-
 const { dirname } = require("path"); //to facilitate file paths
-
 const path = require("path"); // to facilitate file paths
-
 const fs = require("fs/promises"); // to use async & await with fs
-
 const bcrypt = require("bcrypt"); // for encryption
-
 const jwt = require("jsonwebtoken");
 const util = require("util"); // a library to promisify jwt functions (sign,verify)
 const signAsync = util.promisify(jwt.sign); // used in sign and create token
-
 const usersModel = require("./usersModel");
-
 const { customError, authError } = require("../../helpers/customErrors");
-
 const addValidation = require("./validation/userAdd");
 
 //...........creation of Router........................//
@@ -70,6 +62,8 @@ usersRouter.post("/login", async (req, res, next) => {
     next(error);
   }
 });
+
+
 
 // const { authorizeUser } = require('./middlewares');
 
