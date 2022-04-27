@@ -8,7 +8,7 @@ const usersRouter = require('./routers/users/usersRouter');
 require('dotenv').config();
 
 app.use(express.urlencoded());
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 5000;
 
 app.use(express.json());
 app.use(morgan('combined'));
