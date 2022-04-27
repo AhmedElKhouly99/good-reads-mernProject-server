@@ -16,4 +16,4 @@ exports.authError = customError(
   "AUTH_ERROR",
   "invalid username or password"
 );
-//exports.authorizationError = customError(403, 'AUTHORIZATION_ERROR', 'you are not authorized on this action');
+exports.authorizationError = customError(403, 'AUTHORIZATION_ERROR', 'you are not authorized on this action');
