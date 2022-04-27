@@ -6,6 +6,8 @@ const morgan = require('morgan');
 const favicon = require('serve-favicon');
 const usersRouter = require('./routers/users/usersRouter');
 require('dotenv').config();
+var cors = require('cors');
+app.use(cors())
 
 app.use(express.urlencoded());
 const port = process.env.PORT || 5000;
