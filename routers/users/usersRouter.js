@@ -2,7 +2,7 @@ const express = require("express");
 const { dirname } = require("path"); //to facilitate file paths
 const path = require("path"); // to facilitate file paths
 const fs = require("fs/promises"); // to use async & await with fs
-const bcrypt = require("bcrypt"); // for encryption
+// const bcrypt = require("bcrypt"); // for encryption
 const jwt = require("jsonwebtoken");
 const util = require("util"); // a library to promisify jwt functions (sign,verify)
 const signAsync = util.promisify(jwt.sign); // used in sign and create token
@@ -16,69 +16,69 @@ const updateValidation = require('./validation/userUpdate');
 const usersRouter = express.Router();
 
 //........................adding...........//
-usersRouter.post("/signup", addValidation, async (req, res, next) => {
-  const { firstName, lastName, email, password, age, gender, country } =
-    req.body;
+// usersRouter.post("/signup", addValidation, async (req, res, next) => {
+//   const { firstName, lastName, email, password, age, gender, country } =
+//     req.body;
 
-  try {
-    const saltRounds = 12; // with make the number bigger we make things hard for the hackers
-    const hashedPassword = await bcrypt.hash(password, saltRounds);
+//   try {
+//     const saltRounds = 12; // with make the number bigger we make things hard for the hackers
+//     const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-    await usersModel.create({
-      firstName,
-      lastName,
-      email,
-      password: hashedPassword,
-      age,
-      gender,
-      country,
-    });
-    res.send({ success: true });
-  } catch (error) {
-    next(error); // that error is handeled by app.use(err,req,res,next) in the serve page
-  }
-});
+//     await usersModel.create({
+//       firstName,
+//       lastName,
+//       email,
+//       password: hashedPassword,
+//       age,
+//       gender,
+//       country,
+//     });
+//     res.send({ success: true });
+//   } catch (error) {
+//     next(error); // that error is handeled by app.use(err,req,res,next) in the serve page
+//   }
+// });
 
-//..................................login..............................//
+// //..................................login..............................//
 
-usersRouter.post("/login", async (req, res, next) => {
-  try {
-    const secretKey = process.env.SECRET_KEY; // WE SAVED THE KEY IN .env file
-    const { email, password } = req.body;
-    const user = await usersModel.findOne({ email }); //return the full car object
-    if (!user) throw authError;
-    const result = await bcrypt.compare(password, user.password); //return true or false
-    if (!result) throw authError;
-    const token = await signAsync(
-      {
-        id: user.id,
-        admin: false,
-      },
-      secretKey
-    ); //first parameter is data(payload) , second is secret key
+// usersRouter.post("/login", async (req, res, next) => {
+//   try {
+//     const secretKey = process.env.SECRET_KEY; // WE SAVED THE KEY IN .env file
+//     const { email, password } = req.body;
+//     const user = await usersModel.findOne({ email }); //return the full car object
+//     if (!user) throw authError;
+//     const result = await bcrypt.compare(password, user.password); //return true or false
+//     if (!result) throw authError;
+//     const token = await signAsync(
+//       {
+//         id: user.id,
+//         admin: false,
+//       },
+//       secretKey
+//     ); //first parameter is data(payload) , second is secret key
 
-    res.send({token});
-  } catch (error) {
-    next(error);
-  }
-});
+//     res.send({token});
+//   } catch (error) {
+//     next(error);
+//   }
+// });
 
-// //....................................Updating.............................//
+// // //....................................Updating.............................//
 
-usersRouter.patch('/:id', updateValidation, authorizeUser,async (req,res,next) => {
-  const {id} = req.params;
-  const {password} = req.body;
-  try {
-    const saltRound = 12;
-    const hashedPassword = password ? await bcrypt.hash(password, saltRound) : undefined;
-    req.body.password = hashedPassword;
-    await usersModel.findByIdAndUpdate(id,{$set:req.body})
-    res.send({message: "Updatted Successfully"});
-  } catch (error) {
-    next(error)
-  }
+// usersRouter.patch('/:id', updateValidation, authorizeUser,async (req,res,next) => {
+//   const {id} = req.params;
+//   const {password} = req.body;
+//   try {
+//     const saltRound = 12;
+//     const hashedPassword = password ? await bcrypt.hash(password, saltRound) : undefined;
+//     req.body.password = hashedPassword;
+//     await usersModel.findByIdAndUpdate(id,{$set:req.body})
+//     res.send({message: "Updatted Successfully"});
+//   } catch (error) {
+//     next(error)
+//   }
 
-})
+// })
 
 
 
