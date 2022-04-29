@@ -19,7 +19,8 @@ const usersRouter = express.Router();
 usersRouter.post("/signup", addValidation, async (req, res, next) => {
   const { firstName, lastName, email, password, age, gender, country } =
     req.body;
-
+    if(await usersModel.findOne({ email })) return res.send({ faild: "Email already exists !" });
+    
   try {
     const saltRounds = 12; // with make the number bigger we make things hard for the hackers
     const hashedPassword = await bcrypt.hash(password, saltRounds);
