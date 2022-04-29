@@ -9,7 +9,7 @@ const adminRouter = require('./routers/admins/adminRouter');
 require('dotenv').config();
 
 app.use(express.urlencoded());
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 3030;
 
 app.use(express.json());
 app.use(morgan('combined'));
