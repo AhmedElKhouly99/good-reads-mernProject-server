@@ -5,7 +5,7 @@ const { authorizationError } = require('../../helpers/customErrors');
 const verifyAsync = util.promisify(jwt.verify);   //function used to verify token
 
 exports.authorizeUser = async ( req, res, next ) => {
-    const { authorization: token } = req.headers;
+    const { token } = req.headers;
     const { id } = req.params;
     const secretKey = process.env.SECRET_KEY;
     try {

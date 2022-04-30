@@ -31,7 +31,7 @@ app.get('/home', (req, res)=>{
     res.sendFile(htmlFilePath);
 });
 
-app.use(['/user', '/users'], usersRouter);
+// app.use(['/user', '/users'], usersRouter);
 
 app.use((err, req, res, next) => {
     if(!err.status){

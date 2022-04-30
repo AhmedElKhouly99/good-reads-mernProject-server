@@ -11,10 +11,10 @@ const { customError, authError,  } = require("../../helpers/customErrors");
 const addValidation = require("./validation/userAdd");
 const { authorizeUser } = require('./middlewares');
 const updateValidation = require('./validation/userUpdate');
-
+const book = require("../admins/books/bookRouter")
 // creation of Router
 const usersRouter = express.Router();
-
+usersRouter.use(['/book', '/books'], book);
 //........................adding...........//
 usersRouter.post("/signup", addValidation, async (req, res, next) => {
   const { firstName, lastName, email, password, age, gender, country } =
@@ -58,7 +58,7 @@ usersRouter.post("/login", async (req, res, next) => {
       secretKey
     ); //first parameter is data(payload) , second is secret key
 
-    res.send({token});
+    res.send({token, id:user.id});
   } catch (error) {
     next(error);
   }
@@ -83,19 +83,19 @@ usersRouter.patch('/:id', updateValidation, authorizeUser,async (req,res,next) =
 
 
 
-// userRouter.patch('/:userId', authorizeUser, async (req, res, next) => {
-//   const {userId} = req.params;
-//   const {password} = req.body;
-//   try {
-//       const saltRound = 12;
-//       const hashedPassword = password ? await bcrypt.hash(password, saltRound) : undefined;
-//       req.body.password = hashedPassword;
-//       await users.findByIdAndUpdate(userId, {$set: req.body});
-//       res.send({message: "Updatted Successfully"});
-//   } catch (error) {
-//       next(error);
-//   }
-// });
+usersRouter.patch('/:userId', authorizeUser, async (req, res, next) => {
+  const {userId} = req.params;
+  const {password} = req.body;
+  try {
+      const saltRound = 12;
+      const hashedPassword = password ? await bcrypt.hash(password, saltRound) : undefined;
+      req.body.password = hashedPassword;
+      await users.findByIdAndUpdate(userId, {$set: req.body});
+      res.send({message: "Updated Successfully"});
+  } catch (error) {
+      next(error);
+  }
+});
 
 
 
