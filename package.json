@@ -6,7 +6,6 @@
   "scripts": {
     "debug": "nodemon --inspect=9249 index.js",
     "start": "npm i bcrypt  && node index.js"
-   
   },
   "author": "",
   "license": "ISC",
