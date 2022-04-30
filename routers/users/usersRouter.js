@@ -87,19 +87,19 @@ usersRouter.patch('/:id', updateValidation, authorizeUser,async (req,res,next) =
 
 
 
-usersRouter.patch('/:userId', authorizeUser, async (req, res, next) => {
-  const {userId} = req.params;
-  const {password} = req.body;
-  try {
-      const saltRound = 12;
-      const hashedPassword = password ? await bcrypt.hash(password, saltRound) : undefined;
-      req.body.password = hashedPassword;
-      await users.findByIdAndUpdate(userId, {$set: req.body});
-      res.send({message: "Updated Successfully"});
-  } catch (error) {
-      next(error);
-  }
-});
+// usersRouter.patch('/:userId', authorizeUser, async (req, res, next) => {
+//   const {userId} = req.params;
+//   const {password} = req.body;
+//   try {
+//       const saltRound = 12;
+//       const hashedPassword = password ? await bcrypt.hash(password, saltRound) : undefined;
+//       req.body.password = hashedPassword;
+//       await users.findByIdAndUpdate(userId, {$set: req.body});
+//       res.send({message: "Updated Successfully"});
+//   } catch (error) {
+//       next(error);
+//   }
+// });
 
 
 
