@@ -11,10 +11,14 @@ const { customError, authError,  } = require("../../helpers/customErrors");
 const addValidation = require("./validation/userAdd");
 const { authorizeUser } = require('./middlewares');
 const updateValidation = require('./validation/userUpdate');
-const book = require("../admins/books/bookRouter")
+const categoriesRouter = require("../admins/categories/categoryRouter")
+const authorsRouter = require("../admins/authors/authorRouter")
+const booksRouter = require("../admins/books/bookRouter")
 // creation of Router
 const usersRouter = express.Router();
-usersRouter.use(['/book', '/books'], book);
+usersRouter.use(['/category', '/categories'], categoriesRouter);
+usersRouter.use(['/author', '/authors'], authorsRouter);
+usersRouter.use(['/book', '/books'], booksRouter);
 //........................adding...........//
 usersRouter.post("/signup", addValidation, async (req, res, next) => {
   const { firstName, lastName, email, password, age, gender, country } =
