@@ -9,11 +9,11 @@ const signAsync = util.promisify(jwt.sign); // used in sign and create token
 const usersModel = require("./usersModel");
 const { customError, authError,  } = require("../../helpers/customErrors");
 const addValidation = require("./validation/userAdd");
-const { authorizeUser } = require('./middlewares');
+const { authorizeUser } = require('../../helpers/middlewares');
 const updateValidation = require('./validation/userUpdate');
-const categoriesRouter = require("../admins/categories/categoryRouter")
-const authorsRouter = require("../admins/authors/authorRouter")
-const booksRouter = require("../admins/books/bookRouter")
+const categoriesRouter = require("../categories/categoryRouter")
+const authorsRouter = require("../authors/authorRouter")
+const booksRouter = require("../books/bookRouter")
 // creation of Router
 const usersRouter = express.Router();
 usersRouter.use(['/category', '/categories'], categoriesRouter);
@@ -21,9 +21,9 @@ usersRouter.use(['/author', '/authors'], authorsRouter);
 usersRouter.use(['/book', '/books'], booksRouter);
 //........................adding...........//
 usersRouter.post("/signup", addValidation, async (req, res, next) => {
-  const { firstName, lastName, email, password, age, gender, country } =
+  const { firstName, lastName, email, password, date_of_birth, gender, country } =
     req.body;
-    if(await usersModel.findOne({ email })) return res.send({ faild: "Email already exists !" });
+    if(await usersModel.findOne({ email })) return res.send({ failed: "Email already exists !" });
     
   try {
     const saltRounds = 12; // with make the number bigger we make things hard for the hackers
@@ -34,7 +34,7 @@ usersRouter.post("/signup", addValidation, async (req, res, next) => {
       lastName,
       email,
       password: hashedPassword,
-      age,
+      date_of_birth,
       gender,
       country,
     });

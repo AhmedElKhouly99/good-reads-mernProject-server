@@ -4,7 +4,7 @@ const userAddingSchema = joi.object({
     firstName:joi.string().min(1).required(),
     lastName: joi.string().min(1).required(),
     password: joi.string().pattern(new RegExp('^[a-zA-Z0-9]{8,30}$')).required(),
-    age: joi.number().min(10),
+    date_of_birth: joi.string(),
     gender : joi.string().min(1).valid("male","female").required(),
     country :joi.string().min(1).required(),
     email : joi.string().email().required()
