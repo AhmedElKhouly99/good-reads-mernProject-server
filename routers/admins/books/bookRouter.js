@@ -35,6 +35,18 @@ bookRouter.get('/', async (req, res, next)=> {
     
 });
 
+bookRouter.get('/:id', async (req, res, next)=> {
+    const { id } = req.params;
+
+    try {
+        const books = await BookModel.findById(id);
+        res.send(books);
+    } catch (error) {
+        next(error);
+    }
+    
+});
+
 bookRouter.patch('/:id' ,async (req, res,next)=> {
     const { id } = req.params;
     try {

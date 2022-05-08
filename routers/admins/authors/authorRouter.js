@@ -35,6 +35,17 @@ authorRouter.get('/', async (req, res, next)=> {
     
 });
 
+authorRouter.get('/:id', async (req, res, next)=> {
+    const { id } = req.params;
+    try {
+        const authors = await AuthorModel.findById(id);
+        res.send(authors);
+    } catch (error) {
+        next(error);
+    }
+    
+});
+
 authorRouter.patch('/:id' ,async (req, res,next)=> {
     const { id } = req.params;
     try {

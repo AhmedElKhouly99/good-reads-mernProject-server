@@ -35,6 +35,17 @@ categoryRouter.get('/', async (req, res, next)=> {
     
 });
 
+categoryRouter.get('/:id', async (req, res, next)=> {
+    const { id } = req.params;
+    try {
+        const categories = await CategoryModel.findById(id);
+        res.send(categories);
+    } catch (error) {
+        next(error);
+    }
+    
+});
+
 categoryRouter.patch('/:id' ,async (req, res,next)=> {
     const { id } = req.params;
     try {
