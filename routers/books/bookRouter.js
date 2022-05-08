@@ -2,19 +2,20 @@
 const express = require('express');
 // const jwt = require('jsonwebtoken');
 // const signAsync = util.promisify(jwt.sign);
-const {customError, authError} = require('../../../helpers/customErrors');
+const {customError, authError} = require('../../helpers/customErrors');
 const BookModel = require('./bookModel');
 const bookRouter = express.Router();
-var cors = require('cors')
+var cors = require('cors');
+const { authorizeUser, authorizeAdmin } = require('../../helpers/middlewares');
 bookRouter.use(cors())
 bookRouter.use((req,res, next)=> {
     console.log(req.url);
     next();
 });
 
-
-bookRouter.post('/', async (req, res, next) => {
+bookRouter.post('/', authorizeAdmin, async (req, res, next) => {
     const { name,CategoryId,AuthorId} = req.body;
+    // const { token } = req.headers;
     try {
         
         await BookModel.create({ name,CategoryId,AuthorId});
@@ -48,6 +49,7 @@ bookRouter.get('/:id', async (req, res, next)=> {
 });
 
 bookRouter.patch('/:id' ,async (req, res,next)=> {
+
     const { id } = req.params;
     try {
         await BookModel.findByIdAndUpdate(id, {$set: req.body});
@@ -57,7 +59,7 @@ bookRouter.patch('/:id' ,async (req, res,next)=> {
     }
 });
 
-bookRouter.delete("/:id", async (req, res, next) => {
+bookRouter.delete("/:id", authorizeAdmin, async (req, res, next) => {
     const { id } = req.params;
     console.log(id)
     try {

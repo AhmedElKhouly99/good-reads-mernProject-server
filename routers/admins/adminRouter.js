@@ -6,9 +6,9 @@ const signAsync = util.promisify(jwt.sign);
 const {customError, authError} = require('../../helpers/customErrors');
 const AdminModel = require('./adminModel');
 const adminRouter = express.Router();
-const categoryRouter = require("./categories/categoryRouter")
-const authorRouter = require('./authors/authorRouter')
-const bookRouter = require('./books/bookRouter')
+const categoryRouter = require("../categories/categoryRouter")
+const authorRouter = require('../authors/authorRouter')
+const bookRouter = require('../books/bookRouter')
 
 var cors = require('cors')
 adminRouter.use(cors())

@@ -2,10 +2,11 @@
 const express = require('express');
 // const jwt = require('jsonwebtoken');
 // const signAsync = util.promisify(jwt.sign);
-const {customError, authError} = require('../../../helpers/customErrors');
+const {customError, authError} = require('../../helpers/customErrors');
 const AuthorModel = require('./authorModel');
 const authorRouter = express.Router();
-var cors = require('cors')
+var cors = require('cors');
+const { authorizeAdmin } = require('../../helpers/middlewares');
 authorRouter.use(cors())
 authorRouter.use((req,res, next)=> {
     console.log(req.url);
@@ -13,7 +14,7 @@ authorRouter.use((req,res, next)=> {
 });
 
 
-authorRouter.post('/', async (req, res, next) => {
+authorRouter.post('/', authorizeAdmin, async (req, res, next) => {
     const { firstName,lastName,dateOfBirth} = req.body;
     try {
     
@@ -47,6 +48,7 @@ authorRouter.get('/:id', async (req, res, next)=> {
 });
 
 authorRouter.patch('/:id' ,async (req, res,next)=> {
+
     const { id } = req.params;
     try {
         await AuthorModel.findByIdAndUpdate(id, {$set: req.body});
@@ -56,7 +58,7 @@ authorRouter.patch('/:id' ,async (req, res,next)=> {
     }
 });
 
-authorRouter.delete("/:id", async (req, res, next) => {
+authorRouter.delete("/:id", authorizeAdmin, async (req, res, next) => {
     const { id } = req.params;
     try {
       await AuthorModel.findByIdAndDelete(id);
