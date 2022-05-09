@@ -4,6 +4,8 @@ const express = require('express');
 // const signAsync = util.promisify(jwt.sign);
 const {customError, authError} = require('../../helpers/customErrors');
 const BookModel = require('./bookModel');
+// const AuthorModel = require('./authorModel');
+// const CategoryModel = require('./categoryModel');
 const bookRouter = express.Router();
 var cors = require('cors');
 const { authorizeUser, authorizeAdmin } = require('../../helpers/middlewares');
@@ -28,8 +30,28 @@ bookRouter.post('/', authorizeAdmin, async (req, res, next) => {
 bookRouter.get('/', async (req, res, next)=> {
 
     try {
-        const books = await BookModel.find({});
-        res.send(books);
+      
+        BookModel.aggregate([{
+            $lookup: {
+                    from: "authors",
+                    localField: "AuthorId",
+                    foreignField: "_id",
+                    as: "author"
+                }
+        }, 
+        {
+            $lookup: {
+                    from: "categories",
+                    localField: "CategoryId",
+                    foreignField: "_id",
+                    as: "category"
+                }
+        }
+    ],function (error, data) {
+            return res.send(data);
+       
+   })
+     
     } catch (error) {
         next(error);
     }
