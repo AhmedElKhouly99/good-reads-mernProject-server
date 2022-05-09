@@ -15,7 +15,7 @@ bookRouter.use((req,res, next)=> {
     next();
 });
 
-bookRouter.post('/', authorizeAdmin, async (req, res, next) => {
+bookRouter.post('/', async (req, res, next) => {
     const { name,CategoryId,AuthorId} = req.body;
     // const { token } = req.headers;
     try {
@@ -81,7 +81,7 @@ bookRouter.patch('/:id' ,async (req, res,next)=> {
     }
 });
 
-bookRouter.delete("/:id", authorizeAdmin, async (req, res, next) => {
+bookRouter.delete("/:id", async (req, res, next) => {
     const { id } = req.params;
     console.log(id)
     try {
