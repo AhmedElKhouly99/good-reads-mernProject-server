@@ -1,13 +1,16 @@
 // const util = require('util');
 const express = require('express');
+var bodyParser = require('body-parser');
 // const jwt = require('jsonwebtoken');
 // const signAsync = util.promisify(jwt.sign);
 const {customError, authError} = require('../../helpers/customErrors');
 const BookModel = require('./bookModel');
-// const AuthorModel = require('./authorModel');
-// const CategoryModel = require('./categoryModel');
+
 const bookRouter = express.Router();
 var cors = require('cors');
+bookRouter.use(bodyParser.json({limit: "50mb"}));
+bookRouter.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+
 const { authorizeUser, authorizeAdmin } = require('../../helpers/middlewares');
 bookRouter.use(cors())
 bookRouter.use((req,res, next)=> {
@@ -16,11 +19,11 @@ bookRouter.use((req,res, next)=> {
 });
 
 bookRouter.post('/', async (req, res, next) => {
-    const { name,CategoryId,AuthorId} = req.body;
-    // const { token } = req.headers;
+    const { name,AuthorId,CategoryId,image} = req.body;
+    
     try {
         
-        await BookModel.create({ name,CategoryId,AuthorId});
+        await BookModel.create({ name,AuthorId,CategoryId,image});
         res.send({success: true});
     } catch (error) {
         next(error);
@@ -80,6 +83,7 @@ bookRouter.patch('/:id' ,async (req, res,next)=> {
         next(error);
     }
 });
+
 
 bookRouter.delete("/:id", async (req, res, next) => {
     const { id } = req.params;
