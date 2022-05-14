@@ -97,11 +97,12 @@ bookRouter.delete("/:id", async (req, res, next) => {
     }
   });
 
-  bookRouter.get('/popular',  async (req, res, next)=> {
+  bookRouter.get("/popular",  async (req, res, next)=> {
     try {
         // .sort({name: -1})
-        const popularBooks = await BookModel.find({});
-        res.send({popularBooks}); 
+        // const popularBooks = await BookModel.find();
+        // res.send({popularBooks}); 
+        res.send('dfghjhhf');
       } catch (error) {
         next(error);
       }
