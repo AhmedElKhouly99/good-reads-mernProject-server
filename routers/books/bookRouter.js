@@ -102,7 +102,7 @@ bookRouter.delete("/:id", async (req, res, next) => {
         // .sort({name: -1})
         // const popularBooks = await BookModel.find();
         // res.send({popularBooks}); 
-        res.send('dfghjhhf');
+        res.send({ message: "successfully deleted" });
       } catch (error) {
         next(error);
       }
