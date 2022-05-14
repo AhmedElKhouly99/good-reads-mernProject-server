@@ -83,7 +83,10 @@ usersRouter.patch('/:id', updateValidation, authorizeUser,async (req,res,next) =
     next(error)
   }
 
-})
+});
+
+
+// usersRouter.get()
 
 
 
