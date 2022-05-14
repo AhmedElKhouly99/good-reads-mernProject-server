@@ -99,7 +99,7 @@ bookRouter.delete("/:id", async (req, res, next) => {
 
   bookRouter.get('/popular',  async (req, res, next)=> {
     try {
-        const popularBooks = await BookModel.find({}).sort({rating: -1}).limit(3);
+        const popularBooks = await BookModel.find({}).sort({name: -1}).limit(3);
         res.send(popularBooks); 
       } catch (error) {
         next(error);
