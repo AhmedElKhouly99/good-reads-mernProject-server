@@ -19,21 +19,21 @@ adminRouter.use((req,res, next)=> {
 adminRouter.use(['/category', '/categories'], categoryRouter);
 adminRouter.use(['/author', '/authors'], authorRouter);
 adminRouter.use(['/book', '/books'], bookRouter);
-adminRouter.post('/', async (req, res, next) => {
-    const {username, password} = req.body;
-    try {
-        const saltRounds = 12;
-        const hashedPassword = await bcrypt.hash(password, saltRounds);
+// adminRouter.post('/', async (req, res, next) => {
+//     const {username, password} = req.body;
+//     try {
+//         const saltRounds = 12;
+//         const hashedPassword = await bcrypt.hash(password, saltRounds);
     
-        // const user = new AdminModel({username, password});
-        // await user.save();
+//         // const user = new AdminModel({username, password});
+//         // await user.save();
 
-        await AdminModel.create({username, password: hashedPassword});
-        res.send({success: true});
-    } catch (error) {
-        next(error);
-    }
-});
+//         await AdminModel.create({username, password: hashedPassword});
+//         res.send({success: true});
+//     } catch (error) {
+//         next(error);
+//     }
+// });
 
 adminRouter.post('/login', async (req, res, next)=> {
     const { username, password } = req.body;

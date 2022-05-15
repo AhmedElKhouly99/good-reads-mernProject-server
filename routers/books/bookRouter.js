@@ -19,7 +19,7 @@ bookRouter.use((req,res, next)=> {
     next();
 });
 
-bookRouter.post('/', async (req, res, next) => {
+bookRouter.post('/',authorizeAdmin, async (req, res, next) => {
     const { name,AuthorId,CategoryId,image} = req.body;
     try {
 
@@ -106,7 +106,7 @@ bookRouter.get('/:id', async (req, res, next)=> {
     
 });
 
-bookRouter.patch('/:id' ,async (req, res,next)=> {
+bookRouter.patch('/:id' , authorizeAdmin,async (req, res,next)=> {
 
     const { id } = req.params;
     try {
@@ -118,7 +118,7 @@ bookRouter.patch('/:id' ,async (req, res,next)=> {
 });
 
 
-bookRouter.delete("/:id", async (req, res, next) => {
+bookRouter.delete("/:id",authorizeAdmin, async (req, res, next) => {
     const { id } = req.params;
     console.log(id)
     try {

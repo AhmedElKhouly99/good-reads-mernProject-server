@@ -18,7 +18,7 @@ authorRouter.use((req,res, next)=> {
     next();
 });
 
-authorRouter.post('/', async (req, res, next) => {
+authorRouter.post('/',authorizeAdmin, async (req, res, next) => {
     const { firstName,lastName,dateOfBirth,image} = req.body;
     try {
     
@@ -71,7 +71,7 @@ authorRouter.get('/:id', async (req, res, next)=> {
     
 });
 
-authorRouter.patch('/:id' ,async (req, res,next)=> {
+authorRouter.patch('/:id' , authorizeAdmin, async (req, res,next)=> {
 
     const { id } = req.params;
     try {
@@ -82,7 +82,7 @@ authorRouter.patch('/:id' ,async (req, res,next)=> {
     }
 });
 
-authorRouter.delete("/:id", async (req, res, next) => {
+authorRouter.delete("/:id",authorizeAdmin, async (req, res, next) => {
     const { id } = req.params;
     try {
       await AuthorModel.findByIdAndDelete(id);

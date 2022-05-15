@@ -14,7 +14,7 @@ categoryRouter.use((req,res, next)=> {
 });
 
 
-categoryRouter.post('/', async (req, res, next) => {
+categoryRouter.post('/',authorizeAdmin, async (req, res, next) => {
     const { name} = req.body;
     try {
         
@@ -67,7 +67,7 @@ categoryRouter.get('/:id', async (req, res, next)=> {
     
 });
 
-categoryRouter.patch('/:id' ,async (req, res,next)=> {
+categoryRouter.patch('/:id', authorizeAdmin,async (req, res,next)=> {
 
     const { id } = req.params;
     try {
@@ -78,7 +78,7 @@ categoryRouter.patch('/:id' ,async (req, res,next)=> {
     }
 });
 
-categoryRouter.delete("/:id", async (req, res, next) => {
+categoryRouter.delete("/:id",authorizeAdmin, async (req, res, next) => {
     const { id } = req.params;
     console.log(id)
     try {
