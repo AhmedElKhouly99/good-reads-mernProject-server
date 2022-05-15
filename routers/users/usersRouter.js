@@ -9,7 +9,7 @@ const signAsync = util.promisify(jwt.sign); // used in sign and create token
 const usersModel = require("./usersModel");
 const { customError, authError,  } = require("../../helpers/customErrors");
 const addValidation = require("./validation/userAdd");
-const { authorizeUser } = require('../../helpers/middlewares');
+const { authorizeUser, getUserId } = require('../../helpers/middlewares');
 const updateValidation = require('./validation/userUpdate');
 const categoriesRouter = require("../categories/categoryRouter")
 const authorsRouter = require("../authors/authorRouter")
@@ -70,13 +70,14 @@ usersRouter.post("/login", async (req, res, next) => {
 
 // //....................................Updating.............................//
 
-usersRouter.patch('/:id', updateValidation, authorizeUser,async (req,res,next) => {
-  const {id} = req.params;
+usersRouter.patch('/', updateValidation, authorizeUser,async (req,res,next) => {
+  // const {id} = req.params;
   const {password} = req.body;
   try {
     const saltRound = 12;
     const hashedPassword = password ? await bcrypt.hash(password, saltRound) : undefined;
     req.body.password = hashedPassword;
+    id = getUserId();
     await usersModel.findByIdAndUpdate(id,{$set:req.body})
     res.send({message: "Updatted Successfully"});
   } catch (error) {
