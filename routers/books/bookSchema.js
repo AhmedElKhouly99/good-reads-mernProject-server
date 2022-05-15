@@ -6,6 +6,7 @@ const bookSchema = new mongoose.Schema({
     noOfRatings: 'number',
     image:'string',
     name: 'string',
+    // rating: 'number',
     CategoryId:[{ type: mongoose.Schema.Types.ObjectId, ref: 'Category' }],
     AuthorId:[{ type: mongoose.Schema.Types.ObjectId,ref:'Author' }]
 });

@@ -3,18 +3,18 @@ const express = require('express');
 var bodyParser = require('body-parser');
 // const jwt = require('jsonwebtoken');
 // const signAsync = util.promisify(jwt.sign);
-const {customError, authError} = require('../../helpers/customErrors');
+const { customError, authError } = require('../../helpers/customErrors');
 const BookModel = require('./bookModel');
 
 const bookRouter = express.Router();
 var cors = require('cors');
-bookRouter.use(bodyParser.json({limit: "50mb"}));
-bookRouter.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+bookRouter.use(bodyParser.json({ limit: "50mb" }));
+bookRouter.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 
 const { authorizeUser, authorizeAdmin } = require('../../helpers/middlewares');
 
 bookRouter.use(cors())
-bookRouter.use((req,res, next)=> {
+bookRouter.use((req, res, next) => {
     console.log(req.url);
     next();
 });
@@ -30,35 +30,35 @@ bookRouter.post('/',authorizeAdmin, async (req, res, next) => {
     }
 });
 
-bookRouter.get('/', async (req, res, next)=> {
+bookRouter.get('/', async (req, res, next) => {
 
     try {
-      
+
         BookModel.aggregate([{
             $lookup: {
-                    from: "authors",
-                    localField: "AuthorId",
-                    foreignField: "_id",
-                    as: "author"
-                }
-        }, 
+                from: "authors",
+                localField: "AuthorId",
+                foreignField: "_id",
+                as: "author"
+            }
+        },
         {
             $lookup: {
-                    from: "categories",
-                    localField: "CategoryId",
-                    foreignField: "_id",
-                    as: "category"
-                }
+                from: "categories",
+                localField: "CategoryId",
+                foreignField: "_id",
+                as: "category"
+            }
         }
-    ],function (error, data) {
+        ], function (error, data) {
             return res.send(data);
-       
-   })
-     
+
+        })
+
     } catch (error) {
         next(error);
     }
-    
+
 });
 
 bookRouter.patch('/rate', async (req, res, next) => {
@@ -103,15 +103,15 @@ bookRouter.get('/:id', async (req, res, next)=> {
     } catch (error) {
         next(error);
     }
-    
+
 });
 
 bookRouter.patch('/:id' , authorizeAdmin,async (req, res,next)=> {
 
     const { id } = req.params;
     try {
-        await BookModel.findByIdAndUpdate(id, {$set: req.body});
-        res.send({message: 'updated successfully'}); 
+        await BookModel.findByIdAndUpdate(id, { $set: req.body });
+        res.send({ message: 'updated successfully' });
     } catch (error) {
         next(error);
     }
@@ -122,11 +122,15 @@ bookRouter.delete("/:id",authorizeAdmin, async (req, res, next) => {
     const { id } = req.params;
     console.log(id)
     try {
-      await BookModel.findByIdAndDelete(id);
-      res.send({ message: "successfully deleted" });
-  
+        await BookModel.findByIdAndDelete(id);
+        res.send({ message: "successfully deleted" });
+
     } catch (error) {
-      next(error);
+        next(error);
     }
-  });
+});
+
+
+
+
 module.exports = bookRouter;
