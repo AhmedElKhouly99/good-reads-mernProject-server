@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 const { authorizationError } = require('./customErrors');
 
 const verifyAsync = util.promisify(jwt.verify);   //function used to verify token
-
+let userId;
 exports.authorizeUser = async ( req, res, next ) => {
     const { token } = req.headers;
     // const { id } = req.params;
@@ -15,6 +15,9 @@ exports.authorizeUser = async ( req, res, next ) => {
         next(authorizationError);
     }
     next();
+};
+exports.getUserId = () => {
+    return userId;
 };
 
 exports.authorizeAdmin = async ( req, res, next ) => {

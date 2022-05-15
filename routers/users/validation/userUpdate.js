@@ -4,7 +4,7 @@ const userUpdatingSchema = joi.object({
     firstName:joi.string().min(1),
     lastName: joi.string().min(1),
     password: joi.string().pattern(new RegExp('^[a-zA-Z0-9]{8,30}$')),
-    age: joi.number().min(10),
+    date_of_birth: joi.date(),
     gender : joi.string().min(1).valid("male","female"),
     country :joi.string().min(1),
     email : joi.string().email()
