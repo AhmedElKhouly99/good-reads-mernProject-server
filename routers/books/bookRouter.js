@@ -25,9 +25,9 @@ bookRouter.post('/',authorizeAdmin,addValidation, async (req, res, next) => {
     const { name,AuthorId,CategoryId,image} = req.body;
     try {
 
-        // await BookModel.create({ name,AuthorId,CategoryId,image, noOfRatings:0, rating:0});
-        console.log(name,AuthorId,CategoryId,image);
-        await BookModel.create({ name,AuthorId,CategoryId,image});
+        await BookModel.create({ name,AuthorId,CategoryId,image, noOfRatings:0, rating:0});
+        // console.log(name,AuthorId,CategoryId,image);
+        // await BookModel.create({ name,AuthorId,CategoryId,image});
         res.send({success: true});
     } catch (error) {
         next(error);
