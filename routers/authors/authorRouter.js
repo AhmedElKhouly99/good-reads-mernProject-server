@@ -6,6 +6,8 @@ const {customError, authError} = require('../../helpers/customErrors');
 const AuthorModel = require('./authorModel');
 const authorRouter = express.Router();
 var cors = require('cors');
+const updateValidation = require('./validation/authorUpdate');
+const addValidation = require("./validation/authorAdd");
 const { authorizeAdmin } = require('../../helpers/middlewares');
 const BookModel = require('../books/bookModel');
 
@@ -18,10 +20,10 @@ authorRouter.use((req,res, next)=> {
     next();
 });
 
-authorRouter.post('/',authorizeAdmin, async (req, res, next) => {
+authorRouter.post('/',authorizeAdmin,addValidation, async (req, res, next) => {
     const { firstName,lastName,dateOfBirth,image} = req.body;
     try {
-    
+        
         await AuthorModel.create({ firstName,lastName,image,dateOfBirth});
         res.send({success: true});
     } catch (error) {
@@ -82,7 +84,7 @@ authorRouter.patch('/:id' , authorizeAdmin, async (req, res,next)=> {
     }
 });
 
-authorRouter.delete("/:id",authorizeAdmin, async (req, res, next) => {
+authorRouter.delete("/:id",authorizeAdmin,updateValidation, async (req, res, next) => {
     const { id } = req.params;
     try {
       await AuthorModel.findByIdAndDelete(id);

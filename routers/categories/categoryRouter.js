@@ -6,6 +6,8 @@ const {customError, authError} = require('../../helpers/customErrors');
 const CategoryModel = require('./categoryModel');
 const { authorizeUser, authorizeAdmin } = require('../../helpers/middlewares');
 const categoryRouter = express.Router();
+const addValidation = require("./validation/categoryAdd");
+const updateValidation = require('./validation/categoryUpdate');
 var cors = require('cors')
 categoryRouter.use(cors())
 categoryRouter.use((req,res, next)=> {
@@ -14,7 +16,7 @@ categoryRouter.use((req,res, next)=> {
 });
 
 
-categoryRouter.post('/',authorizeAdmin, async (req, res, next) => {
+categoryRouter.post('/',addValidation,authorizeAdmin, async (req, res, next) => {
     const { name} = req.body;
     try {
         
@@ -67,7 +69,7 @@ categoryRouter.get('/:id', async (req, res, next)=> {
     
 });
 
-categoryRouter.patch('/:id', authorizeAdmin,async (req, res,next)=> {
+categoryRouter.patch('/:id',updateValidation, authorizeAdmin,async (req, res,next)=> {
 
     const { id } = req.params;
     try {

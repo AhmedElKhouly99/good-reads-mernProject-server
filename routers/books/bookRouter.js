@@ -5,7 +5,8 @@ var bodyParser = require('body-parser');
 // const signAsync = util.promisify(jwt.sign);
 const { customError, authError } = require('../../helpers/customErrors');
 const BookModel = require('./bookModel');
-
+const addValidation = require("./validation/bookAdd");
+const updateValidation = require('./validation/bookUpdate');
 const bookRouter = express.Router();
 var cors = require('cors');
 bookRouter.use(bodyParser.json({ limit: "50mb" }));
@@ -19,10 +20,11 @@ bookRouter.use((req, res, next) => {
     next();
 });
 
-bookRouter.post('/',authorizeAdmin, async (req, res, next) => {
+bookRouter.post('/',authorizeAdmin,addValidation, async (req, res, next) => {
+    
     const { name,AuthorId,CategoryId,image} = req.body;
     try {
-
+        console.log(name,AuthorId,CategoryId,image);
         await BookModel.create({ name,AuthorId,CategoryId,image});
         res.send({success: true});
     } catch (error) {
@@ -106,7 +108,7 @@ bookRouter.get('/:id', async (req, res, next)=> {
 
 });
 
-bookRouter.patch('/:id' , authorizeAdmin,async (req, res,next)=> {
+bookRouter.patch('/:id' ,updateValidation, authorizeAdmin,async (req, res,next)=> {
 
     const { id } = req.params;
     try {
