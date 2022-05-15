@@ -71,19 +71,35 @@ usersRouter.post("/login", async (req, res, next) => {
 // //....................................Updating.............................//
 
 usersRouter.patch('/:id', updateValidation, authorizeUser,async (req,res,next) => {
-  const {id} = req.params;
+  const {Uid} = req.params;
   const {password} = req.body;
   try {
     const saltRound = 12;
     const hashedPassword = password ? await bcrypt.hash(password, saltRound) : undefined;
     req.body.password = hashedPassword;
-    await usersModel.findByIdAndUpdate(id,{$set:req.body})
+    await usersModel.findByIdAndUpdate(Uid,{$set:req.body})
     res.send({message: "Updatted Successfully"});
   } catch (error) {
     next(error)
   }
 
 });
+
+
+// usersRouter.put('/:Uid/:Bid', updateValidation, authorizeUser,async (req,res,next) => {
+//   const {Uid, Bid} = req.params;
+//   const {password, status} = req.body;
+//   try {
+//     const saltRound = 12;
+//     const hashedPassword = password ? await bcrypt.hash(password, saltRound) : undefined;
+//     req.body.password = hashedPassword;
+//     await usersModel.findByIdAndUpdate(Uid,{$push:{books:{Bid, status, rating:0, review:""}}});
+//     res.send({message: "Book added Successfully"});
+//   } catch (error) {
+//     next(error)
+//   }
+
+// });
 
 
 // usersRouter.get()
