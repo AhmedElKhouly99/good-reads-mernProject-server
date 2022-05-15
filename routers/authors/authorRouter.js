@@ -8,6 +8,9 @@ const authorRouter = express.Router();
 var cors = require('cors');
 const { authorizeAdmin } = require('../../helpers/middlewares');
 authorRouter.use(cors())
+var bodyParser = require('body-parser');
+authorRouter.use(bodyParser.json({limit: "50mb"}));
+authorRouter.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 authorRouter.use((req,res, next)=> {
     console.log(req.url);
     next();

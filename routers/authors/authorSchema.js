@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const authorSchema = new mongoose.Schema({
     
-    photo: 'string',
+    image: 'string',
     firstName: 'string',
     lastName: 'string',
     dateOfBirth: 'date',
