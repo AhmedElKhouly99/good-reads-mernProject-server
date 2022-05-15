@@ -12,6 +12,7 @@ bookRouter.use(bodyParser.json({ limit: "50mb" }));
 bookRouter.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 
 const { authorizeUser, authorizeAdmin } = require('../../helpers/middlewares');
+
 bookRouter.use(cors())
 bookRouter.use((req, res, next) => {
     console.log(req.url);
@@ -19,12 +20,11 @@ bookRouter.use((req, res, next) => {
 });
 
 bookRouter.post('/', async (req, res, next) => {
-    const { name, AuthorId, CategoryId, image } = req.body;
-
+    const { name,AuthorId,CategoryId,image} = req.body;
     try {
 
-        await BookModel.create({ name, AuthorId, CategoryId, image });
-        res.send({ success: true });
+        await BookModel.create({ name,AuthorId,CategoryId,image});
+        res.send({success: true});
     } catch (error) {
         next(error);
     }
@@ -61,20 +61,40 @@ bookRouter.get('/', async (req, res, next) => {
 
 });
 
-bookRouter.get("/popular", async (req, res, next) => {
+bookRouter.patch('/rate', async (req, res, next) => {
+    const {rating, bookId} = req.body;
     try {
-        console.log("hjklkjhjk");
-        // .sort({name: -1})
-        const popularBooks = await BookModel.find().sort({name: -1});
-        res.send({popularBooks}); 
-
-        res.status(200).send({ message: "successfully deleted" });
+        // await BookModel.findByIdAndUpdate(bookId, {$set: {noOfRatings:noOfRatings++ , rating: ()}});
+        res.send({message: 'updated successfully'}); 
     } catch (error) {
         next(error);
     }
-});
+})
 
-bookRouter.get('/:id', async (req, res, next) => {
+bookRouter.get("/popular", async (req, res, next) =>{
+    try {
+        // let popularBooks = await BookModel.aggregate([
+        //     { $group : { _id : {}, books: { $push: "$name" } } },
+        //     { $project: {
+        //         _id: 1,
+        //         numberOfBooks: { $cond: { if: { $isArray: "$books" }, then: { $size: "$books" }, else: "NA"} }
+        //      } },
+        //     { $sort  : { numberOfBooks: 1 }}
+        //     // { $slice: [ "$numberOfBooks", 3 ] }
+        // ])
+
+        const popularBooks = await (await BookModel.find({}).sort({_id: 1})).splice(3);
+
+        // popularBooks = popularBooks.slice(-3).reverse();
+
+        res.status(200).send(popularBooks);
+    } catch (error) {
+        next(error);
+    }
+})
+
+
+bookRouter.get('/:id', async (req, res, next)=> {
     const { id } = req.params;
 
     try {
