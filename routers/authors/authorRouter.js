@@ -7,12 +7,13 @@ const AuthorModel = require('./authorModel');
 const authorRouter = express.Router();
 var cors = require('cors');
 const { authorizeAdmin } = require('../../helpers/middlewares');
+const BookModel = require('../books/bookModel');
+
 authorRouter.use(cors())
 authorRouter.use((req,res, next)=> {
     console.log(req.url);
     next();
 });
-
 
 authorRouter.post('/', async (req, res, next) => {
     const { firstName,lastName,dateOfBirth,image} = req.body;
@@ -35,6 +36,26 @@ authorRouter.get('/', async (req, res, next)=> {
     }
     
 });
+
+authorRouter.get("/popular", async (req, res, next) => {
+    try {
+        let popularAuthors = await BookModel.aggregate([
+            { $group : { _id : "$AuthorId", books: { $push: "$name" } } },
+            { $project: {
+                _id: 1,
+                numberOfBooks: { $cond: { if: { $isArray: "$books" }, then: { $size: "$books" }, else: "NA"} }
+             } },
+            { $sort  : { numberOfBooks: 1 }}
+            // { $slice: [ "$numberOfBooks", 3 ] }
+        ])
+
+        popularAuthors = popularAuthors.slice(-3).reverse();
+
+        res.send(popularAuthors);
+    } catch (error) {
+        next(error);
+    }
+})
 
 authorRouter.get('/:id', async (req, res, next)=> {
     const { id } = req.params;
@@ -68,4 +89,8 @@ authorRouter.delete("/:id", async (req, res, next) => {
       next(error);
     }
   });
+
+
+
+
 module.exports = authorRouter;

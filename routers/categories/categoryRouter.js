@@ -36,6 +36,26 @@ categoryRouter.get('/', async (req, res, next)=> {
     
 });
 
+categoryRouter.get("/popular", async (req, res, next) => {
+    try {
+        let popularCategories = await CategoryModel.aggregate([
+            { $group : { _id : "$CategoryId", categories: { $push: "$name" } } },
+            { $project: {
+                _id: 1,
+                numberOfCategories: { $cond: { if: { $isArray: "$categories" }, then: { $size: "$categories" }, else: "NA"} }
+             } },
+            { $sort  : { numberOfCategories: 1 }}
+            // { $slice: [ "$numberOfBooks", 3 ] }
+        ])
+
+        popularCategories = popularCategories.slice(-3).reverse();
+
+        res.status(200).send(popularCategories);
+    } catch (error) {
+        next(error);
+    }
+})
+
 categoryRouter.get('/:id', async (req, res, next)=> {
     const { id } = req.params;
     try {
