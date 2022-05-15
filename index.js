@@ -9,12 +9,16 @@ const adminRouter = require('./routers/admins/adminRouter');
 require('dotenv').config();
 var cors = require('cors');
 app.use(cors())
+var bodyParser = require('body-parser');
 
-app.use(express.urlencoded());
+// app.use(express.urlencoded());
 
 const port = process.env.PORT || 5000;
 
-app.use(express.json());
+// app.use(express.json());
+app.use(bodyParser.json({limit: "50mb"}));
+app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+
 app.use(morgan('combined'));
 app.use(['/user', '/users'], usersRouter);
 app.use(['/admins','/admin'], adminRouter);
