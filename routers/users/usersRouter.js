@@ -84,7 +84,26 @@ usersRouter.patch('/', updateValidation, authorizeUser,async (req,res,next) => {
     next(error)
   }
 
-})
+});
+
+
+// usersRouter.put('/:Uid/:Bid', updateValidation, authorizeUser,async (req,res,next) => {
+//   const {Uid, Bid} = req.params;
+//   const {password, status} = req.body;
+//   try {
+//     const saltRound = 12;
+//     const hashedPassword = password ? await bcrypt.hash(password, saltRound) : undefined;
+//     req.body.password = hashedPassword;
+//     await usersModel.findByIdAndUpdate(Uid,{$push:{books:{Bid, status, rating:0, review:""}}});
+//     res.send({message: "Book added Successfully"});
+//   } catch (error) {
+//     next(error)
+//   }
+
+// });
+
+
+// usersRouter.get()
 
 
 

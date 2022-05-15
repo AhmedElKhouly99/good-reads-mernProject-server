@@ -15,9 +15,9 @@ var bodyParser = require('body-parser');
 
 const port = process.env.PORT || 5000;
 
-// app.use(express.json());
-app.use(bodyParser.json({limit: "50mb"}));
-app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
+app.use(express.json());
+// app.use(bodyParser.json({limit: "50mb"}));
+// app.use(bodyParser.urlencoded({limit: "50mb", extended: true, parameterLimit:50000}));
 
 app.use(morgan('combined'));
 app.use(['/user', '/users'], usersRouter);
