@@ -33,10 +33,15 @@ bookRouter.post('/',authorizeAdmin,addValidation, async (req, res, next) => {
 });
 
 bookRouter.get('/', async (req, res, next) => {
-
+        const {page} = req.query;
+        let pages = 0;
+        const limit = 6;
     try {
-
-        BookModel.aggregate([{
+        BookModel.count().then((count) => {pages =Math.ceil(count/limit)}).then(()=>{  BookModel.aggregate([
+        
+        
+       
+            {
             $lookup: {
                 from: "authors",
                 localField: "AuthorId",
@@ -51,11 +56,17 @@ bookRouter.get('/', async (req, res, next) => {
                 foreignField: "_id",
                 as: "category"
             }
-        }
+        },
         ], function (error, data) {
-            return res.send(data);
+            console.log(typeof data)
+            // data['pages'] = pages
+            console.log(data.pages)
+            
+            return res.send({data,pages});
 
-        })
+        }).skip((limit * page)-limit).limit(limit)})
+
+      
 
     } catch (error) {
         next(error);
