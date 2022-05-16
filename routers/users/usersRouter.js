@@ -6,10 +6,11 @@ const bcrypt = require("bcrypt"); // for encryption
 const jwt = require("jsonwebtoken");
 const util = require("util"); // a library to promisify jwt functions (sign,verify)
 const signAsync = util.promisify(jwt.sign); // used in sign and create token
+const verifyAsync = util.promisify(jwt.verify);   //function used to verify token
 const usersModel = require("./usersModel");
-const { customError, authError,  } = require("../../helpers/customErrors");
+const { customError, authError, } = require("../../helpers/customErrors");
 const addValidation = require("./validation/userAdd");
-const { authorizeUser } = require('../../helpers/middlewares');
+const { authorizeUser, getUserId } = require('../../helpers/middlewares');
 const updateValidation = require('./validation/userUpdate');
 const categoriesRouter = require("../categories/categoryRouter")
 const authorsRouter = require("../authors/authorRouter")
@@ -23,8 +24,8 @@ usersRouter.use(['/book', '/books'], booksRouter);
 usersRouter.post("/signup", addValidation, async (req, res, next) => {
   const { firstName, lastName, email, password, date_of_birth, gender, country } =
     req.body;
-    if(await usersModel.findOne({ email })) return res.send({ failed: "Email already exists !" });
-    
+  if (await usersModel.findOne({ email })) return res.send({ failed: "Email already exists !" });
+
   try {
     const saltRounds = 12; // with make the number bigger we make things hard for the hackers
     const hashedPassword = await bcrypt.hash(password, saltRounds);
@@ -62,7 +63,7 @@ usersRouter.post("/login", async (req, res, next) => {
       secretKey
     ); //first parameter is data(payload) , second is secret key
 
-    res.send({token, id:user.id});
+    res.send({ token, id: user.id });
   } catch (error) {
     next(error);
   }
@@ -70,15 +71,20 @@ usersRouter.post("/login", async (req, res, next) => {
 
 // //....................................Updating.............................//
 
-usersRouter.patch('/:id', updateValidation, authorizeUser,async (req,res,next) => {
-  const {Uid} = req.params;
-  const {password} = req.body;
+usersRouter.patch('/', updateValidation, authorizeUser, async (req, res, next) => {
+  // const {Uid} = req.params;
+  const { password } = req.body;
   try {
+    const { token } = req.headers;
+    const secretKey = process.env.SECRET_KEY;
+    const { id } = await verifyAsync(token, secretKey);
+    console.log(token);
     const saltRound = 12;
     const hashedPassword = password ? await bcrypt.hash(password, saltRound) : undefined;
     req.body.password = hashedPassword;
-    await usersModel.findByIdAndUpdate(Uid,{$set:req.body})
-    res.send({message: "Updatted Successfully"});
+    // id = getUserId();
+    await usersModel.findByIdAndUpdate(id, { $set: req.body })
+    res.send({ message: "Updatted Successfully" });
   } catch (error) {
     next(error)
   }
@@ -86,20 +92,21 @@ usersRouter.patch('/:id', updateValidation, authorizeUser,async (req,res,next) =
 });
 
 
-// usersRouter.put('/:Uid/:Bid', updateValidation, authorizeUser,async (req,res,next) => {
-//   const {Uid, Bid} = req.params;
-//   const {password, status} = req.body;
-//   try {
-//     const saltRound = 12;
-//     const hashedPassword = password ? await bcrypt.hash(password, saltRound) : undefined;
-//     req.body.password = hashedPassword;
-//     await usersModel.findByIdAndUpdate(Uid,{$push:{books:{Bid, status, rating:0, review:""}}});
-//     res.send({message: "Book added Successfully"});
-//   } catch (error) {
-//     next(error)
-//   }
+usersRouter.put('/:Bid', authorizeUser, async (req, res, next) => {
+  const { Bid } = req.params;
+  // const {status} = req.body;
+  try {
+    const { token } = req.headers;
+    const secretKey = process.env.SECRET_KEY;
+    const { id } = await verifyAsync(token, secretKey);
+    console.log(id);
+    await usersModel.findByIdAndUpdate(id, { $push: { books: { _id: Bid, ...req.body } } });
+    res.send({ message: "Book added Successfully" });
+  } catch (error) {
+    next(error)
+  }
 
-// });
+});
 
 
 // usersRouter.get()
