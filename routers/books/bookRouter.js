@@ -5,6 +5,7 @@ var bodyParser = require('body-parser');
 // const signAsync = util.promisify(jwt.sign);
 const { customError, authError } = require('../../helpers/customErrors');
 const BookModel = require('./bookModel');
+const UsersModel = require("../users/usersModel")
 const addValidation = require("./validation/bookAdd");
 const updateValidation = require('./validation/bookUpdate');
 const bookRouter = express.Router();
@@ -12,7 +13,7 @@ var cors = require('cors');
 bookRouter.use(bodyParser.json({ limit: "50mb" }));
 bookRouter.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 
-const { authorizeUser, authorizeAdmin } = require('../../helpers/middlewares');
+const { authorizeUser, authorizeAdmin, getUserId } = require('../../helpers/middlewares');
 
 bookRouter.use(cors())
 bookRouter.use((req, res, next) => {
@@ -66,9 +67,15 @@ bookRouter.get('/', async (req, res, next) => {
 });
 
 bookRouter.patch('/rate', async (req, res, next) => {
-    const {userRate, bookId} = req.body;
+    const {userRate, bookId, userId} = req.body;
     try {
         await BookModel.findByIdAndUpdate(bookId, { $inc: { noOfRatings: 1 , rating: userRate} });
+        await UsersModel.aggregate([
+            {$match: {_id: userId}},
+            {$match: {"books._id": bookId}},
+            {$set: {rating: userRate}}
+        ])
+
         res.send({message: 'updated rating successfully'}); 
     } catch (error) {
         next(error);

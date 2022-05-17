@@ -8,7 +8,8 @@ const { authorizeUser, authorizeAdmin } = require('../../helpers/middlewares');
 const categoryRouter = express.Router();
 const addValidation = require("./validation/categoryAdd");
 const updateValidation = require('./validation/categoryUpdate');
-var cors = require('cors')
+var cors = require('cors');
+const BookModel = require('../books/bookModel');
 categoryRouter.use(cors())
 categoryRouter.use((req,res, next)=> {
     console.log(req.url);
@@ -39,20 +40,28 @@ categoryRouter.get('/', async (req, res, next)=> {
 });
 
 categoryRouter.get("/popular", async (req, res, next) => {
+    let authorArray = [];
     try {
-        let popularCategories = await CategoryModel.aggregate([
+        let popularCategories = await BookModel.aggregate([
             { $group : { _id : "$CategoryId", categories: { $push: "$name" } } },
             { $project: {
                 _id: 1,
                 numberOfCategories: { $cond: { if: { $isArray: "$categories" }, then: { $size: "$categories" }, else: "NA"} }
              } },
             { $sort  : { numberOfCategories: 1 }}
-            // { $slice: [ "$numberOfBooks", 3 ] }
+
         ])
 
         popularCategories = popularCategories.slice(-3).reverse();
 
-        res.status(200).send(popularCategories);
+        for(let i=0 ; i<3; i++){
+            const myId = (popularCategories[i]._id[0]);
+            authorArray.push(await CategoryModel.findById(myId));
+            if(i == 2){
+                res.send(authorArray);
+            }
+        }
+
     } catch (error) {
         next(error);
     }

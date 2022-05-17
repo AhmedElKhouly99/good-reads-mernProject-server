@@ -43,19 +43,28 @@ authorRouter.get('/', async (req, res, next)=> {
 });
 
 authorRouter.get("/popular", async (req, res, next) => {
+    let authorsArray= [];
+
     try {
         let popularAuthors = await BookModel.aggregate([
-            { $group : { _id : "$AuthorId", authors: { $push: "$firstName" } } },
+            { $group : { _id : "$AuthorId", authors: { $push: "$name" } } },
             { $project: {
                 _id: 1,
-                numberOfAuthors: { $cond: { if: { $isArray: "$authors" }, then: { $size: "$authors" }, else: "NA"} }
+                numberOfBooks: { $cond: { if: { $isArray: "$authors" }, then: { $size: "$authors" }, else: "NA"} }
              } },
-            { $sort  : { numberOfAuthors: 1 }}
-            // { $slice: [ "$numberOfBooks", 3 ] }
+            { $sort  : { numberOfBooks: 1 }},
         ])
-        popularAuthors = popularAuthors.slice(-3).reverse();
 
-        res.send(popularAuthors);
+        popularAuthors = popularAuthors.slice(-3).reverse();
+        
+        for(let i=0 ; i<3; i++){
+            const myId = (popularAuthors[i]._id[0]);
+            authorsArray.push(await AuthorModel.findById(myId));
+            if(i == 2){
+                res.send(authorsArray);
+            }
+        }
+        
     } catch (error) {
         next(error);
     }
