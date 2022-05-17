@@ -32,13 +32,20 @@ authorRouter.post('/',authorizeAdmin,addValidation, async (req, res, next) => {
 });
 
 authorRouter.get('/', async (req, res, next)=> {
-
+    const {page} = req.query;
+    let pages = 0;
+    const limit = 6;
     try {
-        const authors = await AuthorModel.find({});
-        res.send(authors);
-    } catch (error) {
+        await AuthorModel.count().then((count) => {pages =Math.ceil(count/limit)});  
+       const authors= await AuthorModel.find({}).skip((limit * page)-limit).limit(limit);
+          res.send({authors,pages});
+
+    }
+     catch (error) {
         next(error);
     }
+
+ 
     
 });
 
