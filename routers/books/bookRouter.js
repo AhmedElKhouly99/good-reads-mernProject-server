@@ -79,13 +79,13 @@ bookRouter.get('/', async (req, res, next) => {
 
 bookRouter.patch('/rate', async (req, res, next) => {
     const {userRate, bookId, userId} = req.body;
+
     try {
+
         await BookModel.findByIdAndUpdate(bookId, { $inc: { noOfRatings: 1 , rating: userRate} });
-        await UsersModel.aggregate([
-            {$match: {_id: userId}},
-            {$match: {"books._id": bookId}},
-            {$set: {rating: userRate}}
-        ])
+        await UsersModel.findOneAndUpdate(
+            {'_id': userId, "books._id": bookId}, 
+            {'$set': {'books.$.rating': userRate}})
 
         res.send({message: 'updated rating successfully'}); 
     } catch (error) {

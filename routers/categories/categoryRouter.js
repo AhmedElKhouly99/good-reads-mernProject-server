@@ -67,15 +67,14 @@ categoryRouter.get("/popular", async (req, res, next) => {
     }
 })
 
-categoryRouter.get('/:id', async (req, res, next)=> {
-    const { id } = req.params;
+categoryRouter.get('/:categoryId', async (req, res, next)=> {
+    const { categoryId } = req.params;
     try {
-        const categories = await CategoryModel.findById(id);
-        res.send(categories);
+        const books = await BookModel.find({"CategoryId.0": categoryId});
+        res.send(books);
     } catch (error) {
         next(error);
     }
-    
 });
 
 categoryRouter.patch('/:id',updateValidation, authorizeAdmin,async (req, res,next)=> {

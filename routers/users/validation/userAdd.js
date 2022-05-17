@@ -7,7 +7,8 @@ const userAddingSchema = joi.object({
     date_of_birth: joi.string(),
     gender : joi.string().min(1).valid("male","female").required(),
     country :joi.string().min(1).required(),
-    email : joi.string().email().required()
+    email : joi.string().email().required(),
+    books : joi.object()
 });
 const addValidation = async (req, res, next) =>{
     try {
