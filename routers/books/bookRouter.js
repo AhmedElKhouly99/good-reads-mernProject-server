@@ -1,8 +1,8 @@
-// const util = require('util');
+const util = require('util');
 const express = require('express');
 var bodyParser = require('body-parser');
-// const jwt = require('jsonwebtoken');
-// const signAsync = util.promisify(jwt.sign);
+const jwt = require('jsonwebtoken');
+const signAsync = util.promisify(jwt.sign);
 const verifyAsync = util.promisify(jwt.verify); 
 const { customError, authError } = require('../../helpers/customErrors');
 const BookModel = require('./bookModel');
