@@ -107,11 +107,35 @@ bookRouter.patch('/rate', async (req, res, next) => {
 
     try {
 
-        await BookModel.findByIdAndUpdate(bookId, { $inc: { noOfRatings: 1, rating: userRate } });
-        await UsersModel.findOneAndUpdate(
+        const isRate = await UsersModel.findOne(
             { '_id': userId, "books._id": bookId },
-            { '$set': { 'books.$.rating': userRate } })
+            { '$out': { 'books.$.isRated': 1 } }
+        )
 
+        // const isRate = await UsersModel.aggregate(
+        //     [
+        //         {$match: { '_id': userId, "books._id": bookId}},
+
+        //         // { $group: {
+        //         //         _id: 1,
+        //         //         isRated: [{$eq:['$isRated', true]}, 1, 0],
+        //         //     }
+        //         // },
+        //     ])
+            console.log(isRate);
+   
+        // await UsersModel.findOneAndUpdate(
+        //     { '_id': userId, "books._id": bookId },
+        //     { '$set': { 'books.$.rating': userRate } })
+        
+        // await BookModel.findByIdAndUpdate(bookId, { $inc: { noOfRatings: 1, rating: userRate } });
+
+        // { if: { $isArray: "$authors" }, then: { $size: "$authors" }, else: "NA" }
+
+        // await UsersModel.findOneAndUpdate(
+        //     { '_id': userId, "books._id": bookId },
+        //     { '$set': { 'books.$.isRated': true } })
+        
         res.send({ message: 'updated rating successfully' });
     } catch (error) {
         next(error);
