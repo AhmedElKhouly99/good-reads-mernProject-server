@@ -28,15 +28,26 @@ categoryRouter.post('/',addValidation,authorizeAdmin, async (req, res, next) => 
     }
 });
 
-categoryRouter.get('/', async (req, res, next)=> {
 
+categoryRouter.get('/', async (req, res, next) => {
+    const { name } = req.query;
+    try {
+        const category = await CategoryModel.find({ name: new RegExp(name, "i") })
+        res.send(category);
+    }
+    catch (error) {
+        next(error);
+    }
+});
+
+
+categoryRouter.get('/', async (req, res, next)=> {
     try {
         const categories = await CategoryModel.find({});
         res.send(categories);
     } catch (error) {
         next(error);
-    }
-    
+    }  
 });
 
 categoryRouter.get("/popular", async (req, res, next) => {
