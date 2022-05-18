@@ -36,18 +36,6 @@ bookRouter.post('/', authorizeAdmin, addValidation, async (req, res, next) => {
 });
 
 
-// bookRouter.get('/', async (req, res, next) => {
-//     const { name } = req.query;
-//     try {
-//         const books = await BookModel.find({ name: new RegExp(name, "i") })
-//         res.send(books);
-//     }
-//     catch (error) {
-//         next(error);
-//     }
-// });
-
-
 bookRouter.get('/', async (req, res, next) => {
     const { page, name } = req.query;
     let pages = 0;
