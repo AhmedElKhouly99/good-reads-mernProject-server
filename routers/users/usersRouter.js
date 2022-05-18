@@ -92,23 +92,44 @@ usersRouter.patch('/', updateValidation, authorizeUser, async (req, res, next) =
 });
 
 
-usersRouter.put('/:Bid', authorizeUser, async (req, res, next) => {
-  const { Bid } = req.params;
-  // const {status} = req.body;
+// usersRouter.put('/:Uid', async (req, res, next) => {
+//   const { Uid } = req.params;
+//   const { isRated, Bid, status, review,rating } = req.body;
+//     isRated = isRated?isRated:false;
+//     status = status?status:false;
+//     review = review?review:false;
+//     rating = rating?rating:false;
+//   try {
+//     // const { token } = req.headers;
+//     // const secretKey = process.env.SECRET_KEY;
+//     // const { id } = await verifyAsync(token, secretKey);
+//     // console.log(id);
+//     await usersModel.findByIdAndUpdate(Uid, { $push: { books: { _id: Bid, isRated, status, review, rating } } });
+//     res.send({ message: "Book added Successfully" });
+//   } catch (error) {
+//     next(error)
+//   }
+
+// });
+
+usersRouter.get('/rate', async (req, res, next) => {
+  // const { Uid } = req.params;
+  const { Bid } = req.body;
   try {
     const { token } = req.headers;
     const secretKey = process.env.SECRET_KEY;
     const { id } = await verifyAsync(token, secretKey);
-    console.log(id);
-    await usersModel.findByIdAndUpdate(id, { $push: { books: { _id: Bid, isRated: false, ...req.body } } });
-    res.send({ message: "Book added Successfully" });
+    // { isRated, status, rating, review }
+    const book = (await usersModel.find(
+      { "books._id": Bid },
+      { _id: id, books: { $elemMatch: { _id: Bid } } }))[0].books[0];
+
+    console.log(book);
+    res.send(book);
   } catch (error) {
-    next(error)
+    next(error);
   }
-
-});
-
-
+})
 
 
 module.exports = usersRouter;

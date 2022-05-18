@@ -102,6 +102,69 @@ bookRouter.get('/', async (req, res, next) => {
 
 });
 
+
+bookRouter.patch('/:Uid', async (req, res, next) => {
+    const { oldStatus, oldRating } = req.query;
+    const { Uid } = req.params;
+    let { isRated, Bid, status, review, rating } = req.body;
+    isRated = isRated ? isRated : false;
+    status = status ? status : 1;
+    review = review ? review : undefined;
+    rating = rating ? rating : 0;
+    try {
+        if (isRated && rating) {
+            await BookModel.findByIdAndUpdate(Bid, { $inc: { rating: rating - oldRating } });
+            await UsersModel.updateOne(
+                { '_id': Uid, "books": { $elemMatch: { _id: Bid } } },
+                {
+                    '$set': { 'books.$.rating': rating }
+                })
+            console.log("If 1");
+        } else if (oldStatus == 0) {
+            await UsersModel.findByIdAndUpdate(Uid, { $push: { books: { _id: Bid, isRated, status, review, rating } } });
+            console.log("If 2");
+        } else {
+            console.log("If 3");
+            isRated = rating ? true : false;
+            await UsersModel.updateOne(
+                { '_id': Uid, "books._id": Bid },
+                { '$set': { 'books.$.rating': rating, 'books.$.isRated': isRated, 'books.$.status': status, 'books.$.review': review } })
+            await BookModel.findByIdAndUpdate(Bid, { $inc: { noOfRatings: 1, rating: rating } });
+        }
+        // const { token } = req.headers;
+        // const secretKey = process.env.SECRET_KEY;
+        // const { id } = await verifyAsync(token, secretKey);
+        // console.log(id);
+        // await UsersModel.findByIdAndUpdate(Uid, { $push: { books: { _id: Bid, isRated, status, review, rating } } });
+        res.send({ message: "Book added Successfully" });
+    } catch (error) {
+        next(error)
+    }
+
+});
+
+// bookRouter.patch('/rate/:Uid', async (req, res, next) => {
+//     const { Uid } = req.params;
+//     const { isRated, Bid, status, review,rating } = req.body;
+//     isRated = isRated?isRated:false;
+//     status = status?status:false;
+//     review = review?review:false;
+//     rating = rating?rating:false;
+//     try {
+
+//     } catch (error) {
+//         next(error);
+//     }
+// });
+
+
+
+
+
+
+
+
+
 bookRouter.patch('/rate', async (req, res, next) => {
     const { userRate, bookId, userId } = req.body;
 
@@ -122,12 +185,12 @@ bookRouter.patch('/rate', async (req, res, next) => {
         //         //     }
         //         // },
         //     ])
-            console.log(isRate);
-   
+        console.log(isRate);
+
         // await UsersModel.findOneAndUpdate(
         //     { '_id': userId, "books._id": bookId },
         //     { '$set': { 'books.$.rating': userRate } })
-        
+
         // await BookModel.findByIdAndUpdate(bookId, { $inc: { noOfRatings: 1, rating: userRate } });
 
         // { if: { $isArray: "$authors" }, then: { $size: "$authors" }, else: "NA" }
@@ -135,7 +198,7 @@ bookRouter.patch('/rate', async (req, res, next) => {
         // await UsersModel.findOneAndUpdate(
         //     { '_id': userId, "books._id": bookId },
         //     { '$set': { 'books.$.isRated': true } })
-        
+
         res.send({ message: 'updated rating successfully' });
     } catch (error) {
         next(error);
@@ -143,7 +206,7 @@ bookRouter.patch('/rate', async (req, res, next) => {
 })
 
 bookRouter.patch('/shelve', async (req, res, next) => {
-    const { bookShelve  , bookId, userId } = req.body;
+    const { bookShelve, bookId, userId } = req.body;
 
     try {
         await UsersModel.findOneAndUpdate(
