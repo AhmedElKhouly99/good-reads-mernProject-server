@@ -3,6 +3,7 @@ const express = require('express');
 var bodyParser = require('body-parser');
 // const jwt = require('jsonwebtoken');
 // const signAsync = util.promisify(jwt.sign);
+const verifyAsync = util.promisify(jwt.verify); 
 const { customError, authError } = require('../../helpers/customErrors');
 const BookModel = require('./bookModel');
 const UsersModel = require("../users/usersModel")
@@ -129,7 +130,7 @@ bookRouter.patch('/', async (req, res, next) => {
         const { id } = await verifyAsync(token, secretKey);
         // console.log(id);
 
-        if (isRated && rating) {
+        if (isRated && (rating || rating == 0)) {
             await BookModel.findByIdAndUpdate(Bid, { $inc: { rating: rating - oldRating } });
             await UsersModel.updateOne(
                 { '_id': id, "books": { $elemMatch: { _id: Bid } } },
