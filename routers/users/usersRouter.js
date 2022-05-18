@@ -112,7 +112,7 @@ usersRouter.patch('/', updateValidation, authorizeUser, async (req, res, next) =
 
 // });
 
-usersRouter.get('/rate', async (req, res, next) => {
+usersRouter.get('/rate/:Bid', async (req, res, next) => {
   // const { Uid } = req.params;
   const { Bid } = req.params;
   try {
