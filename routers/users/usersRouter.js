@@ -100,13 +100,15 @@ usersRouter.put('/:Bid', authorizeUser, async (req, res, next) => {
     const secretKey = process.env.SECRET_KEY;
     const { id } = await verifyAsync(token, secretKey);
     console.log(id);
-    await usersModel.findByIdAndUpdate(id, { $push: { books: { _id: Bid, ...req.body } } });
+    await usersModel.findByIdAndUpdate(id, { $push: { books: { _id: Bid, isRated: false, ...req.body } } });
     res.send({ message: "Book added Successfully" });
   } catch (error) {
     next(error)
   }
 
 });
+
+
 
 
 module.exports = usersRouter;

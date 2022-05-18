@@ -11,8 +11,10 @@ const usersSchema = new mongoose.Schema({
           _id: { type: mongoose.Schema.Types.ObjectId, ref: 'Book' },
           status: { type: "number", required: true },
           rating: { type: "number" },
-          review: { type: "string" }
+          review: { type: "string" },
+          isRated: {type: "boolean"}
      }],
+     
 
 });
 
