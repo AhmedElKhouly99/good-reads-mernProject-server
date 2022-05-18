@@ -114,7 +114,7 @@ usersRouter.patch('/', updateValidation, authorizeUser, async (req, res, next) =
 
 usersRouter.get('/rate', async (req, res, next) => {
   // const { Uid } = req.params;
-  const { Bid } = req.body;
+  const { Bid } = req.params;
   try {
     const { token } = req.headers;
     const secretKey = process.env.SECRET_KEY;
