@@ -118,6 +118,20 @@ bookRouter.patch('/rate', async (req, res, next) => {
     }
 })
 
+bookRouter.patch('/shelve', async (req, res, next) => {
+    const { bookShelve  , bookId, userId } = req.body;
+
+    try {
+        await UsersModel.findOneAndUpdate(
+            { '_id': userId, "books._id": bookId },
+            { '$set': { 'books.$.status': bookShelve } })
+
+        res.send({ message: 'updated book shelve successfully' });
+    } catch (error) {
+        next(error);
+    }
+})
+
 bookRouter.get("/popular", async (req, res, next) => {
     try {
         const popularBooks = await (await BookModel.find({}).sort({ rating: 1 })).splice(-3).reverse();
