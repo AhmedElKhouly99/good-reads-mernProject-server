@@ -16,9 +16,9 @@ exports.authorizeUser = async ( req, res, next ) => {
     }
     next();
 };
-exports.getUserId = () => {
-    return userId;
-};
+// exports.getUserId = () => {
+//     return userId;
+// };
 
 exports.authorizeAdmin = async ( req, res, next ) => {
     const { token } = req.headers;
