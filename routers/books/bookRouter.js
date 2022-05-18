@@ -36,54 +36,60 @@ bookRouter.post('/', authorizeAdmin, addValidation, async (req, res, next) => {
 });
 
 
-bookRouter.get('/', async (req, res, next) => {
-    const { name } = req.query;
-    try {
-        const books = await BookModel.find({ name: new RegExp(name, "i") })
-        res.send(books);
-    }
-    catch (error) {
-        next(error);
-    }
-});
+// bookRouter.get('/', async (req, res, next) => {
+//     const { name } = req.query;
+//     try {
+//         const books = await BookModel.find({ name: new RegExp(name, "i") })
+//         res.send(books);
+//     }
+//     catch (error) {
+//         next(error);
+//     }
+// });
 
 
 bookRouter.get('/', async (req, res, next) => {
-    const { page } = req.query;
+    const { page, name } = req.query;
     let pages = 0;
     const limit = 6;
     try {
-        BookModel.count().then((count) => { pages = Math.ceil(count / limit) }).then(() => {
-            BookModel.aggregate([
+        if (page) {
+            BookModel.count().then((count) => { pages = Math.ceil(count / limit) }).then(() => {
+                BookModel.aggregate([
 
 
 
-                {
-                    $lookup: {
-                        from: "authors",
-                        localField: "AuthorId",
-                        foreignField: "_id",
-                        as: "author"
-                    }
-                },
-                {
-                    $lookup: {
-                        from: "categories",
-                        localField: "CategoryId",
-                        foreignField: "_id",
-                        as: "category"
-                    }
-                },
-            ], function (error, data) {
-                console.log(typeof data)
-                // data['pages'] = pages
-                console.log(data.pages)
+                    {
+                        $lookup: {
+                            from: "authors",
+                            localField: "AuthorId",
+                            foreignField: "_id",
+                            as: "author"
+                        }
+                    },
+                    {
+                        $lookup: {
+                            from: "categories",
+                            localField: "CategoryId",
+                            foreignField: "_id",
+                            as: "category"
+                        }
+                    },
+                ], function (error, data) {
+                    console.log(typeof data)
+                    // data['pages'] = pages
+                    console.log(data.pages)
 
-                return res.send({ data, pages });
+                    return res.send({ data, pages });
 
-            }).skip((limit * page) - limit).limit(limit)
-        })
-
+                }).skip((limit * page) - limit).limit(limit)
+            })
+        } else if (name) {
+            const books = await BookModel.find({ name: new RegExp(name, "i") })
+            res.send(books);
+        } else {
+            throw customError(404, "NOT_FOUND", "page not founf");
+        }
 
 
     } catch (error) {
