@@ -44,9 +44,6 @@ bookRouter.get('/', async (req, res, next) => {
         if (page) {
             BookModel.count().then((count) => { pages = Math.ceil(count / limit) }).then(() => {
                 BookModel.aggregate([
-
-
-
                     {
                         $lookup: {
                             from: "authors",
@@ -73,7 +70,26 @@ bookRouter.get('/', async (req, res, next) => {
                 }).skip((limit * page) - limit).limit(limit)
             })
         } else if (name) {
-            const books = await BookModel.find({ name: new RegExp(name, "i") })
+            const books = await BookModel.aggregate([
+                {
+                    $lookup: {
+                        from: "authors",
+                        localField: "AuthorId",
+                        foreignField: "_id",
+                        as: "author"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "categories",
+                        localField: "CategoryId",
+                        foreignField: "_id",
+                        as: "category"
+                    }
+                },
+                { $match: { name: new RegExp(name, "i") } }
+            ]
+            )
             res.send(books);
         } else {
             throw customError(404, "NOT_FOUND", "page not founf");
