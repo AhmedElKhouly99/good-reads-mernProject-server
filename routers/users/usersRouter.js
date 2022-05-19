@@ -133,10 +133,17 @@ usersRouter.get("/rate/:Bid", async (req, res, next) => {
     const secretKey = process.env.SECRET_KEY;
     const { id } = await verifyAsync(token, secretKey);
     // { isRated, status, rating, review }
+    // const book = (
+    //   await usersModel.find(
+    //     { "books._id": Bid },
+    //     { _id: id, books: { $elemMatch: { _id: Bid } } }
+    //   )
+    // )[0].books[0];
+// const id = "62865302adfa78c9068bef84"
     const book = (
       await usersModel.find(
-        { "books._id": Bid },
-        { _id: id, books: { $elemMatch: { _id: Bid } } }
+        { _id: id },
+        {books: { $elemMatch: { _id: Bid } } }
       )
     )[0].books[0];
 
