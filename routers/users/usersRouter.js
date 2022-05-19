@@ -147,14 +147,12 @@ usersRouter.get("/rate/:Bid", async (req, res, next) => {
   }
 });
 //.............................//
-usersRouter.get("/:Uid", async (req, res, next) => {
-  // const { Uid } = req.params;
-  const { Uid } = req.params;
+usersRouter.get("/", async (req, res, next) => {
   try {
     const { token } = req.headers;
     const secretKey = process.env.SECRET_KEY;
     const { id } = await verifyAsync(token, secretKey);
-    const user = await usersModel.findById(Uid);
+    const user = await usersModel.findById(id);
     // { isRated, status, rating, review }
     //   if (Uid == id){
     //   const user = (await usersModel.findById(Uid));
