@@ -49,13 +49,15 @@ authorRouter.get("/popular", async (req, res, next) => {
 
         popularAuthors = popularAuthors.slice(-3).reverse();
 
-        for (let i = 0; i < 3; i++) {
+        for (let i = 0; i < popularAuthors.length; i++) {
             const myId = (popularAuthors[i]._id[0]);
+            console.log(myId);
             authorsArray.push(await AuthorModel.findById(myId));
             if (i == 2) {
-                res.send(authorsArray);
+                break;
             }
         }
+        res.send(authorsArray);
 
     } catch (error) {
         next(error);
