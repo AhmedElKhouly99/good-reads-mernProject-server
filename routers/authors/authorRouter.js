@@ -32,15 +32,16 @@ authorRouter.post('/', authorizeAdmin, addValidation, async (req, res, next) => 
 });
 
 authorRouter.get('/', async (req, res, next) => {
-    const { page, name } = req.query;
-    let pages = 0;
-    const limit = 6;
+    const {  name } = req.query;
+    // let pages = 0;
+    // const limit = 6;
     try {
-        if (page) {
-            await AuthorModel.count().then((count) => { pages = Math.ceil(count / limit) });
-            const authors = await AuthorModel.find({}).skip((limit * page) - limit).limit(limit);
-            res.send({ authors, pages });
-        } else if (name) {
+        // if (page) {
+            // await AuthorModel.count().then((count) => { pages = Math.ceil(count / limit) });
+            // const authors = await AuthorModel.find({}).skip((limit * page) - limit).limit(limit);
+            // res.send({ authors, pages });
+        // } else
+         if (name) {
             const clause = [
                 { $project: { fullname: { $concat: ["$firstName", " ", "$lastName"] } } },
                 { $match: { fullname: new RegExp(name, "i") } }
@@ -48,7 +49,9 @@ authorRouter.get('/', async (req, res, next) => {
             const authors = await AuthorModel.aggregate(clause)
             res.send(authors);
         } else {
-            throw customError(404, "NOT_FOUND", "page not founf");
+            const authors = await AuthorModel.find({});
+            res.send({ authors });
+            // throw customError(404, "NOT_FOUND", "page not founf");
         }
     }
     catch (error) {
