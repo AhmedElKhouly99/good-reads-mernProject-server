@@ -107,6 +107,19 @@ authorRouter.get('/:id', async (req, res, next) => {
 
 });
 
+
+authorRouter.get('/:id/books', async (req, res, next) => {
+    const { id } = req.params;
+    try {
+        const books = await BookModel.find({"AuthorId.0": id})
+        res.send(books);
+    } catch (error) {
+        next(error);
+    }
+
+});
+
+
 authorRouter.patch('/:id', authorizeAdmin, async (req, res, next) => {
 
     const { id } = req.params;
