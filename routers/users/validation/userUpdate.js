@@ -8,7 +8,8 @@ const userUpdatingSchema = joi.object({
     gender : joi.string().min(1).valid("male","female"),
     country :joi.string().min(1),
     email : joi.string().email(),
-    books: joi.object()
+    books: joi.object(),
+    image: joi.string()
 });
 const updateValidation = async (req, res, next) =>{
     try {
