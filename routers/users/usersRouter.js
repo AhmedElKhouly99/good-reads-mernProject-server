@@ -6,25 +6,33 @@ const bcrypt = require("bcrypt"); // for encryption
 const jwt = require("jsonwebtoken");
 const util = require("util"); // a library to promisify jwt functions (sign,verify)
 const signAsync = util.promisify(jwt.sign); // used in sign and create token
-const verifyAsync = util.promisify(jwt.verify);   //function used to verify token
+const verifyAsync = util.promisify(jwt.verify); //function used to verify token
 const usersModel = require("./usersModel");
-const { customError, authError, } = require("../../helpers/customErrors");
+const { customError, authError } = require("../../helpers/customErrors");
 const addValidation = require("./validation/userAdd");
-const { authorizeUser, getUserId } = require('../../helpers/middlewares');
-const updateValidation = require('./validation/userUpdate');
-const categoriesRouter = require("../categories/categoryRouter")
-const authorsRouter = require("../authors/authorRouter")
-const booksRouter = require("../books/bookRouter")
+const { authorizeUser, getUserId } = require("../../helpers/middlewares");
+const updateValidation = require("./validation/userUpdate");
+const categoriesRouter = require("../categories/categoryRouter");
+const authorsRouter = require("../authors/authorRouter");
+const booksRouter = require("../books/bookRouter");
 // creation of Router
 const usersRouter = express.Router();
-usersRouter.use(['/category', '/categories'], categoriesRouter);
-usersRouter.use(['/author', '/authors'], authorsRouter);
-usersRouter.use(['/book', '/books'], booksRouter);
+usersRouter.use(["/category", "/categories"], categoriesRouter);
+usersRouter.use(["/author", "/authors"], authorsRouter);
+usersRouter.use(["/book", "/books"], booksRouter);
 //........................adding...........//
 usersRouter.post("/signup", addValidation, async (req, res, next) => {
-  const { firstName, lastName, email, password, date_of_birth, gender, country } =
-    req.body;
-  if (await usersModel.findOne({ email })) return res.send({ failed: "Email already exists !" });
+  const {
+    firstName,
+    lastName,
+    email,
+    password,
+    date_of_birth,
+    gender,
+    country,
+  } = req.body;
+  if (await usersModel.findOne({ email }))
+    return res.send({ failed: "Email already exists !" });
 
   try {
     const saltRounds = 12; // with make the number bigger we make things hard for the hackers
@@ -71,26 +79,31 @@ usersRouter.post("/login", async (req, res, next) => {
 
 // //....................................Updating.............................//
 
-usersRouter.patch('/', updateValidation, authorizeUser, async (req, res, next) => {
-  // const {Uid} = req.params;
-  const { password } = req.body;
-  try {
-    const { token } = req.headers;
-    const secretKey = process.env.SECRET_KEY;
-    const { id } = await verifyAsync(token, secretKey);
-    console.log(token);
-    const saltRound = 12;
-    const hashedPassword = password ? await bcrypt.hash(password, saltRound) : undefined;
-    req.body.password = hashedPassword;
-    // id = getUserId();
-    await usersModel.findByIdAndUpdate(id, { $set: req.body })
-    res.send({ message: "Updatted Successfully" });
-  } catch (error) {
-    next(error)
+usersRouter.patch(
+  "/",
+  updateValidation,
+  authorizeUser,
+  async (req, res, next) => {
+    // const {Uid} = req.params;
+    const { password } = req.body;
+    try {
+      const { token } = req.headers;
+      const secretKey = process.env.SECRET_KEY;
+      const { id } = await verifyAsync(token, secretKey);
+      console.log(token);
+      const saltRound = 12;
+      const hashedPassword = password
+        ? await bcrypt.hash(password, saltRound)
+        : undefined;
+      req.body.password = hashedPassword;
+      // id = getUserId();
+      await usersModel.findByIdAndUpdate(id, { $set: req.body });
+      res.send({ message: "Updatted Successfully" });
+    } catch (error) {
+      next(error);
+    }
   }
-
-});
-
+);
 
 // usersRouter.put('/:Uid', async (req, res, next) => {
 //   const { Uid } = req.params;
@@ -112,7 +125,7 @@ usersRouter.patch('/', updateValidation, authorizeUser, async (req, res, next) =
 
 // });
 
-usersRouter.get('/rate/:Bid', async (req, res, next) => {
+usersRouter.get("/rate/:Bid", async (req, res, next) => {
   // const { Uid } = req.params;
   const { Bid } = req.params;
   try {
@@ -120,16 +133,40 @@ usersRouter.get('/rate/:Bid', async (req, res, next) => {
     const secretKey = process.env.SECRET_KEY;
     const { id } = await verifyAsync(token, secretKey);
     // { isRated, status, rating, review }
-    const book = (await usersModel.find(
-      { "books._id": Bid },
-      { _id: id, books: { $elemMatch: { _id: Bid } } }))[0].books[0];
+    const book = (
+      await usersModel.find(
+        { "books._id": Bid },
+        { _id: id, books: { $elemMatch: { _id: Bid } } }
+      )
+    )[0].books[0];
 
     console.log(book);
     res.send(book);
   } catch (error) {
     next(error);
   }
-})
-
+});
+//.............................//
+usersRouter.get("/:Uid", async (req, res, next) => {
+  // const { Uid } = req.params;
+  const { Uid } = req.params;
+  try {
+    const { token } = req.headers;
+    const secretKey = process.env.SECRET_KEY;
+    const { id } = await verifyAsync(token, secretKey);
+    const user = await usersModel.findById(Uid);
+    // { isRated, status, rating, review }
+    //   if (Uid == id){
+    //   const user = (await usersModel.findById(Uid));
+    // }
+    // else{
+    //   next(customError);
+    // }
+    console.log(user);
+    res.send(user);
+  } catch (error) {
+    next(error);
+  }
+});
 
 module.exports = usersRouter;
