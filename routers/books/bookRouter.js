@@ -139,6 +139,7 @@ bookRouter.patch('/', async (req, res, next) => {
                 })
             console.log("If 1");
         } else if (oldStatus == 0) {
+            isRated = rating?true:false;
             await UsersModel.findByIdAndUpdate(id, { $push: { books: { _id: Bid, isRated, status, review, rating } } });
             console.log("If 2");
         } else {
