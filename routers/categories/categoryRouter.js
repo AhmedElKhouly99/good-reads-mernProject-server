@@ -10,6 +10,9 @@ const addValidation = require("./validation/categoryAdd");
 const updateValidation = require('./validation/categoryUpdate');
 var cors = require('cors');
 const BookModel = require('../books/bookModel');
+const getIdFromToken  = require('../../helpers/getIdFromToken');
+const mongoose = require('mongoose');
+
 categoryRouter.use(cors())
 categoryRouter.use((req,res, next)=> {
     console.log(req.url);
@@ -30,25 +33,48 @@ categoryRouter.post('/',addValidation,authorizeAdmin, async (req, res, next) => 
 
 
 categoryRouter.get('/', async (req, res, next) => {
-    const { name } = req.query;
+    const { name,  categoryId} = req.query;
     try {
-        const category = await CategoryModel.find({ name: new RegExp(name, "i") })
-        res.send(category);
+        if(name){
+            const category = await CategoryModel.find({ name: new RegExp(name, "i") })
+            res.send(category);
+        } 
+        else if(categoryId){
+            console.log("else if")
+                let idToSearch = mongoose.Types.ObjectId(categoryId)
+                const books = await BookModel.aggregate([
+                {$match: {"CategoryId.0": idToSearch}},
+                {
+                    $lookup: {
+                        from: "authors",
+                        localField: "AuthorId",
+                        foreignField: "_id",
+                        as: "author"
+                    }
+                },
+                {
+                    $lookup: {
+                        from: "categories",
+                        localField: "CategoryId",
+                        foreignField: "_id",
+                        as: "category"
+                    }
+                },
+            ])
+
+            res.send(books)
+        }  
+        else{
+            console.log("else")
+            const categories = await CategoryModel.find({});
+            res.send(categories);
+        }
     }
     catch (error) {
         next(error);
     }
 });
 
-
-categoryRouter.get('/', async (req, res, next)=> {
-    try {
-        const categories = await CategoryModel.find({});
-        res.send(categories);
-    } catch (error) {
-        next(error);
-    }  
-});
 
 categoryRouter.get("/popular", async (req, res, next) => {
     let authorArray = [];
@@ -87,6 +113,7 @@ categoryRouter.get('/:categoryId', async (req, res, next)=> {
         next(error);
     }
 });
+
 
 categoryRouter.patch('/:id',updateValidation, authorizeAdmin,async (req, res,next)=> {
 
