@@ -15,6 +15,8 @@ const updateValidation = require("./validation/userUpdate");
 const categoriesRouter = require("../categories/categoryRouter");
 const authorsRouter = require("../authors/authorRouter");
 const booksRouter = require("../books/bookRouter");
+const { send } = require("process");
+const BookModel = require("../books/bookModel");
 // creation of Router
 const usersRouter = express.Router();
 usersRouter.use(["/category", "/categories"], categoriesRouter);
@@ -105,6 +107,24 @@ usersRouter.patch(
   }
 );
 
+
+usersRouter.get('/wishlist', async (req, res, next) => {
+  try {
+    const { token } = req.headers;
+    const secretKey = process.env.SECRET_KEY;
+    const { id } = await verifyAsync(token, secretKey);
+    const bId = (await usersModel.findById(id)).books;
+    let books = [];
+    for(let i = 0; i < bId.length; i++){
+      books.push({book:(await BookModel.findById(bId[i]._id)), bookRate:bId[i]})
+    }
+    res.send(books);
+  } catch (error) {
+    next(error);
+  }
+});
+
+
 // usersRouter.put('/:Uid', async (req, res, next) => {
 //   const { Uid } = req.params;
 //   const { isRated, Bid, status, review,rating } = req.body;
@@ -125,6 +145,9 @@ usersRouter.patch(
 
 // });
 
+// usersModel.get('/wishlist', async)
+
+
 usersRouter.get("/rate/:Bid", async (req, res, next) => {
   // const { Uid } = req.params;
   const { Bid } = req.params;
@@ -139,11 +162,11 @@ usersRouter.get("/rate/:Bid", async (req, res, next) => {
     //     { _id: id, books: { $elemMatch: { _id: Bid } } }
     //   )
     // )[0].books[0];
-// const id = "62865302adfa78c9068bef84"
+    // const id = "62865302adfa78c9068bef84"
     const book = (
       await usersModel.find(
         { _id: id },
-        {books: { $elemMatch: { _id: Bid } } }
+        { books: { $elemMatch: { _id: Bid } } }
       )
     )[0].books[0];
 
