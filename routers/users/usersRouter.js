@@ -109,12 +109,16 @@ usersRouter.patch(
 
 
 usersRouter.get('/wishlist', async (req, res, next) => {
+  const { page, name } = req.query;
+  let pages = 0;
+  const limit = 6;
   try {
     const { token } = req.headers;
     const secretKey = process.env.SECRET_KEY;
     const { id } = await verifyAsync(token, secretKey);
     const bId = (await usersModel.findById(id)).books;
     let books = [];
+    pages = bId.length;
     for(let i = 0; i < bId.length; i++){
       books.push({book:(await BookModel.findById(bId[i]._id)), bookRate:bId[i]})
     }
