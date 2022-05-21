@@ -23,7 +23,6 @@ categoryRouter.use((req,res, next)=> {
 categoryRouter.post('/',addValidation,authorizeAdmin, async (req, res, next) => {
     const { name} = req.body;
     try {
-        
         await CategoryModel.create({ name});
         res.send({success: true});
     } catch (error) {
@@ -126,6 +125,7 @@ categoryRouter.patch('/:id',updateValidation, authorizeAdmin,async (req, res,nex
     }
 });
 
+
 categoryRouter.delete("/:id",authorizeAdmin, async (req, res, next) => {
     const { id } = req.params;
     console.log(id)
@@ -137,4 +137,5 @@ categoryRouter.delete("/:id",authorizeAdmin, async (req, res, next) => {
       next(error);
     }
   });
+  
 module.exports = categoryRouter;
