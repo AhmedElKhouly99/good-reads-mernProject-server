@@ -24,9 +24,7 @@
   <h2><a href="https://github.com/AhmedElKhouly99/Good-Reads-Users">git-link-user-app</a></h2>
   
   <p align="center">
-<!--     ![userhome](https://user-images.githubusercontent.com/96909536/169667350-d0b85b0e-85a9-4549-8466-b09a8071ab25.png)![adminhome](https://user-images.githubusercontent.com/96909536/169667358-3ce557ee-a7c7-4c41-913c-a8ab2b23a37c.png)
- -->
-  <img width="600" src="https://images-na.ssl-images-amazon.com/images/I/91Cg3RaXaQL.jpg" alt="User Home photo">
+  ![alt text](https://github.com/[AhmedElKhouly99]/[good-reads-mernProject-server]/blob/[master]/staticFiles/images/userhome.png?raw=true)
   </p>
 
   
