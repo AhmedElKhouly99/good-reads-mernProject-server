@@ -24,7 +24,7 @@
   <h2><a href="https://github.com/AhmedElKhouly99/Good-Reads-Users">git-link-user-app</a></h2>
   
   <p align="center">
-  <img width="550" src="good-reads-mernProject-server/staticFiles/images/userhome.png" alt="User Home photo">
+  <img width="6000" src="good-reads-mernProject-server/staticFiles/images/userhome.png" >
   </p>
 
   
@@ -34,7 +34,7 @@
   <h2><a href="https://github.com/mennahamdy33/good-reads-admin-app-frontend">git-link-admin-app</a></h2>
   
   <p align="center">
-  <img width="550" src="good-reads-mernProject-server/staticFiles/images/adminhome.png" alt="Admin Home photo">
+  <img width="600" src="good-reads-mernProject-server/staticFiles/images/adminhome.png" alt="Admin Home photo">
   </p>
   
 
