@@ -133,7 +133,8 @@ bookRouter.patch('/', async (req, res, next) => {
         const id = await getIdFromToken(token);
 console.log(req);
         if (isRated && (rating || rating == 0)) {
-            await BookModel.findByIdAndUpdate(Bid, { $inc: { rating: rating - oldRating } });
+            // await BookModel.findByIdAndUpdate(Bid, { $inc: { rating: rating - oldRating } });
+            await BookModel.findByIdAndUpdate(Bid, { $inc: { noOfRatings: 1, rating: rating } });
             await UsersModel.updateOne(
                 { '_id': id, "books": { $elemMatch: { _id: Bid } } },
                 {
@@ -150,7 +151,8 @@ console.log(req);
             await UsersModel.updateOne(
                 { '_id': id, "books._id": Bid },
                 { '$set': { 'books.$.rating': rating, 'books.$.isRated': isRated, 'books.$.status': status, 'books.$.review': review } })
-            await BookModel.findByIdAndUpdate(Bid, { $inc: { noOfRatings: 1, rating: rating } });
+            // await BookModel.findByIdAndUpdate(Bid, { $inc: { noOfRatings: 1, rating: rating } });
+            await BookModel.findByIdAndUpdate(Bid, { $inc: { rating: rating - oldRating } });
         }
 
         // await UsersModel.findByIdAndUpdate(Uid, { $push: { books: { _id: Bid, isRated, status, review, rating } } });
