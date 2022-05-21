@@ -13,8 +13,8 @@ const bookRouter = express.Router();
 var cors = require('cors');
 bookRouter.use(bodyParser.json({ limit: "50mb" }));
 bookRouter.use(bodyParser.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
-
 const { authorizeUser, authorizeAdmin, getUserId } = require('../../helpers/middlewares');
+const getIdFromToken = require('../../helpers/getIdFromToken');
 
 bookRouter.use(cors())
 bookRouter.use((req, res, next) => {
@@ -125,10 +125,12 @@ bookRouter.patch('/', async (req, res, next) => {
     rating = rating ? rating : 0;
     try {
 
-        const { token } = req.headers;
-        const secretKey = process.env.SECRET_KEY;
-        const { id } = await verifyAsync(token, secretKey);
+        // const { token } = req.headers;
+        // const secretKey = process.env.SECRET_KEY;
+        // const { id } = await verifyAsync(token, secretKey);
         // console.log(id);
+        const {token} = req.headers;
+        const id = await getIdFromToken(token);
 
         if (isRated && (rating || rating == 0)) {
             await BookModel.findByIdAndUpdate(Bid, { $inc: { rating: rating - oldRating } });
