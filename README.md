@@ -5,12 +5,13 @@
 
 ## OBJECTIVE
   This project aims to develop a Good Reads App using MERN stack. It mainly consists of developing and implementing two Front End Apps 
-  (user and admin apps) using React JavaScript library, and Back End server using NodeJs and MongoDB.
-  
+  (user and admin apps) using React JavaScript library, and Back End server using NodeJs and MongoDB.  
 
+
+<br/><br/>
 <!-- #################################################### -->
 <h1 align="center">Back End App</h1>
-<h2 align="center">Server App<h2>
+<h2>Server App<h2>
 <br/>
  
 
@@ -20,10 +21,11 @@
 ## Database
  
   
-  
+<br/><br/>  
 <!-- #################################################### -->
 <h1 align="center">Front End App</h1>
-  <h2 align="center"><a href="https://github.com/AhmedElKhouly99/Good-Reads-Users">git-link-user-app</a></h2>
+  <h2>User App</h2>
+  <h2><a href="https://github.com/AhmedElKhouly99/Good-Reads-Users">git-link-user-app</a></h2>
   
   <p align="center">
   <img width="550" src="good-reads-mernProject-server/staticFiles/images/userhome.png" alt="User Home photo">
@@ -32,8 +34,9 @@
   ## User App Description
   
   
-  
-<!-- #################################################### -->  
+  <br/><br/>
+<!-- #################################################### --> 
+  <h2>Admin App</h2>
   <h2 align="center"><a href="https://github.com/mennahamdy33/good-reads-admin-app-frontend">git-link-admin-app</a></h2>
   
   <p align="center">
@@ -42,7 +45,7 @@
   
 ## Admin App Description
   
-  
+<br/><br/>  
 ## Contributors
 - Ahmed El khouly
 - Eman Hesham
