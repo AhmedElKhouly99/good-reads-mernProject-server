@@ -24,7 +24,7 @@
   <h2><a href="https://github.com/AhmedElKhouly99/Good-Reads-Users">git-link-user-app</a></h2>
   
   <p align="center">
-    <img src="staticFiles/images/userhome.png" alt="user home photo">  
+    <img width="700" src="staticFiles/images/userhome.png" alt="user home photo">  
   </p>
 
   
@@ -34,7 +34,7 @@
   <h2><a href="https://github.com/mennahamdy33/good-reads-admin-app-frontend">git-link-admin-app</a></h2>
   
   <p align="center">
-  <img width="600" src="staticFiles/images/adminhome.png" alt="admin home photo">
+  <img width="700" src="staticFiles/images/adminhome.png" alt="admin home photo">
   </p>
   
 
