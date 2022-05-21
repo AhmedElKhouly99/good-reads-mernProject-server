@@ -9,7 +9,7 @@ exports.customError = customError;
 exports.inputErr = customError(
   422,
   "ERR_ASSERTION",
-  "username must exist, password must include lower and upper and numbers, age must be more than or equal 10 , gender must be male or female"
+  "firstName, lastName, date_of_birth must exist. password must include lower, upper, numbers, and special characters, and at least with length 8. gender must be male or female"
 );
 exports.authError = customError(
   401,
