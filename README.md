@@ -23,9 +23,9 @@
   <h2>User App</h2>
   <h2><a href="https://github.com/AhmedElKhouly99/Good-Reads-Users">git-link-user-app</a></h2>
   
-  <p align="center">
+<!--   <p align="center"> -->
   ![alt text](https://github.com/[AhmedElKhouly99]/[good-reads-mernProject-server]/blob/[master]/staticFiles/images/userhome.png?raw=true)
-  </p>
+<!--   </p> -->
 
   
   <br/><br/>
