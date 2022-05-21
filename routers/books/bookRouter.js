@@ -131,7 +131,7 @@ bookRouter.patch('/', async (req, res, next) => {
         // console.log(id);
         const {token} = req.headers;
         const id = await getIdFromToken(token);
-
+console.log(req);
         if (isRated && (rating || rating == 0)) {
             await BookModel.findByIdAndUpdate(Bid, { $inc: { rating: rating - oldRating } });
             await UsersModel.updateOne(
