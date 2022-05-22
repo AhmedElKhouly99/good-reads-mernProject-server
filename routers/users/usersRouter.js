@@ -165,7 +165,28 @@ usersRouter.get("/rate/:Bid", async (req, res, next) => {
     next(error);
   }
 });
+///////////////////////////////////
+usersRouter.get("/reviews/:Bid", async (req, res, next) => {
+  const { Bid } = req.params;
+  
+  try {
+  
+    const book = (
+      await usersModel.find(
+        { books: { $elemMatch: { _id: Bid,isRated:true } },
+        
+      
+      
+      }
+      ).select("firstName lastName books.$ image")
+    );
 
+    console.log(book);
+    res.send(book);
+  } catch (error) {
+    next(error);
+  }
+});
 
 //.............................//
 usersRouter.get("/", async (req, res, next) => {
