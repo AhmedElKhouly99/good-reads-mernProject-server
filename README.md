@@ -21,7 +21,7 @@
 <!-- #################################################### -->
 <h1 align="center">Front End App</h1>
   <h2>User App</h2>
-  <h2><a href="https://github.com/AhmedElKhouly99/Good-Reads-Users">git-link-user-app</a></h2>
+  <h2><a href="https://github.com/AhmedElKhouly99/Good-Reads-Users">GitHup link user-app</a></h2>
   
   <p align="center">
     <img width="650" src="staticFiles/images/userhome.png" alt="user home photo">  
@@ -31,15 +31,16 @@
   <br/><br/>
 <!-- #################################################### --> 
   <h2>Admin App</h2>
-  <h2><a href="https://github.com/mennahamdy33/good-reads-admin-app-frontend">git-link-admin-app</a></h2>
+  <h2><a href="https://github.com/mennahamdy33/good-reads-admin-app-frontend">GitHup link admin-app</a></h2>
   
   <p align="center">
   <img width="650" src="staticFiles/images/adminhome.png" alt="admin home photo">
   </p>
   
-
-  
 <br/><br/>  
+## Try to use our app from this link (deployment)
+<h2><a  href="https://goodreadsusers.herokuapp.com/">user-app</a></h2>
+  
 ## Contributors
 - Ahmed El khouly
 - Eman Hesham
@@ -47,10 +48,6 @@
 - Mahmoud Shokry
 - Abanoub Kamal
 
-  
-## Try to use our app from this link
-<h2><a  href="https://goodreadsusers.herokuapp.com/">user-app</a></h2>
-  
   
 ## License
 this project under the GNU General Public License v2.0.
